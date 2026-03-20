@@ -6,29 +6,24 @@ export default function NewsletterSignup() {
         <h2 className="text-4xl md:text-5xl font-black mb-6 tracking-tight font-headline">
           Stay in the Flow
         </h2>
+        <div className="flex flex-wrap justify-center gap-3 mb-8">
+          {["Salesforce CRM", "Apex, LWC, Integrations", "Salesforce & AI Consulting", "AI & LLM Orchestration"].map((item) => (
+            <span key={item} className="font-label text-[10px] tracking-[0.15em] uppercase px-4 py-1.5 rounded-full border border-outline-variant/20 text-on-surface-variant bg-surface-container-highest/50">
+              {item}
+            </span>
+          ))}
+        </div>
         <p className="text-on-surface-variant text-lg mb-10">
-          Join 5,000+ builders and thinkers. Weekly dives into Salesforce, AI agents, and the philosophy of building digital products.
+          Join 50+ builders and thinkers. Weekly dives into Salesforce, AI agents, productivity, and living with intention.
         </p>
-        <form
-          action="https://sangameshgellagupta.substack.com/"
+        <a
+          href="https://sangameshgellagupta.substack.com/"
           target="_blank"
           rel="noopener noreferrer"
-          className="flex flex-col md:flex-row gap-4"
+          className="inline-block px-10 py-4 bg-primary text-on-primary rounded-md font-extrabold tracking-tight hover:brightness-110 active:scale-95 transition-all text-center"
         >
-          <input
-            className="flex-1 bg-surface-container-lowest border border-outline-variant/30 rounded-md px-6 py-4 focus:ring-1 focus:ring-primary focus:border-primary outline-none text-on-surface transition-all placeholder:text-outline"
-            placeholder="email@address.com"
-            type="email"
-          />
-          <a
-            href="https://sangameshgellagupta.substack.com/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="px-10 py-4 bg-primary text-on-primary rounded-md font-extrabold tracking-tight hover:brightness-110 active:scale-95 transition-all text-center"
-          >
-            SUBSCRIBE
-          </a>
-        </form>
+          SUBSCRIBE ON SUBSTACK
+        </a>
         <p className="mt-6 text-xs text-on-surface-variant/60 font-label tracking-[0.2em]">
           NO SPAM. JUST SIGNAL.
         </p>

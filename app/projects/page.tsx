@@ -28,9 +28,16 @@ export default function ProjectsPage() {
         </p>
       </section>
 
+      {/* ─── Featured Project ─── */}
+      {projects.filter((p) => p.featured).map((project) => (
+        <div key={project.slug} className="mb-12">
+          <ProjectCard project={project} featured />
+        </div>
+      ))}
+
       {/* ─── Projects Grid ─── */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
-        {projects.map((project) => (
+        {projects.filter((p) => !p.featured).map((project) => (
           <ProjectCard key={project.slug} project={project} />
         ))}
       </div>

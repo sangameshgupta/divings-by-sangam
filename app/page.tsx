@@ -1,8 +1,11 @@
 import Link from "next/link";
 import ConsultantInsight from "@/components/ConsultantInsight";
 import NewsletterSignup from "@/components/NewsletterSignup";
+import { getSubstackPosts, formatDate } from "@/lib/rss";
 
-export default function Home() {
+export default async function Home() {
+  const posts = await getSubstackPosts();
+  const latestPost = posts[0];
   return (
     <div className="px-6 md:px-12 lg:px-24 max-w-7xl mx-auto">
       {/* ─── Hero Section ─── */}
@@ -49,18 +52,21 @@ export default function Home() {
       {/* ─── Bento Grid Section ─── */}
       <section className="grid grid-cols-1 md:grid-cols-12 gap-6 mb-32">
         {/* Featured Writing */}
-        <div className="md:col-span-8 bg-surface-container-low rounded-xl p-8 flex flex-col justify-between min-h-[400px] border border-outline-variant/10 hover:border-outline-variant/30 transition-all">
+        <a
+          href={latestPost?.link ?? "https://sangameshgellagupta.substack.com/"}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="md:col-span-8 bg-surface-container-low rounded-xl p-8 flex flex-col justify-between min-h-[400px] border border-outline-variant/10 hover:border-outline-variant/30 transition-all"
+        >
           <div>
             <span className="font-label text-[10px] tracking-[0.2em] text-primary uppercase mb-6 block">
               LATEST EDITION
             </span>
             <h2 className="text-3xl md:text-4xl font-bold mb-4 leading-tight font-headline">
-              Architecture as Language: Why Code is the New Literature
+              {latestPost?.title ?? "Read my latest on Substack"}
             </h2>
             <p className="text-on-surface-variant mb-8 line-clamp-3">
-              In this dive, I explore how the paradigms of software design are
-              mirroring the evolution of linguistic structures in the age of
-              generative AI...
+              {latestPost?.description ?? "Head over to Substack to catch the latest dive."}
             </p>
           </div>
           <div className="flex items-center gap-4">
@@ -68,53 +74,19 @@ export default function Home() {
               <span className="material-symbols-outlined text-primary">person</span>
             </div>
             <div>
-              <p className="text-sm font-bold">Sangam Gellagupta</p>
-              <p className="text-xs text-on-surface-variant">
-                March 12, 2024 &bull; 8 min read
-              </p>
+              <p className="text-sm font-bold">Gella Sangamesh Gupta</p>
+              {latestPost?.pubDate && (
+                <p className="text-xs text-on-surface-variant">
+                  {formatDate(latestPost.pubDate)}
+                </p>
+              )}
             </div>
           </div>
-        </div>
+        </a>
 
         {/* Consultant Insight */}
         <div className="md:col-span-4">
           <ConsultantInsight quote="AI is not the pilot; it's the high-performance engine that requires a human architect to set the flight path." />
-        </div>
-
-        {/* The Toolkit */}
-        <div className="md:col-span-4 bg-surface-container-lowest rounded-xl p-8 border border-outline-variant/10 hover:border-primary/20 transition-all">
-          <h4 className="text-xl font-bold mb-4 font-headline">The Toolkit</h4>
-          <ul className="space-y-3 font-label text-xs tracking-[0.15em] text-on-surface-variant">
-            <li className="flex items-center gap-2">
-              <span className="w-1 h-1 bg-primary rounded-full" /> SALESFORCE
-              CORE
-            </li>
-            <li className="flex items-center gap-2">
-              <span className="w-1 h-1 bg-primary rounded-full" /> APEX &amp;
-              LIGHTNING
-            </li>
-            <li className="flex items-center gap-2">
-              <span className="w-1 h-1 bg-primary rounded-full" /> LLM
-              ORCHESTRATION
-            </li>
-            <li className="flex items-center gap-2">
-              <span className="w-1 h-1 bg-primary rounded-full" /> REACT &amp;
-              TAILWIND
-            </li>
-          </ul>
-        </div>
-
-        {/* Workspace Image */}
-        <div className="md:col-span-8 overflow-hidden rounded-xl group relative h-[250px] border border-outline-variant/10 bg-surface-container-highest">
-          <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent opacity-60 z-10" />
-          <div className="absolute bottom-6 left-8 z-20">
-            <p className="font-label text-[10px] tracking-[0.3em] uppercase text-white/70">
-              ENVIRONMENT
-            </p>
-            <h5 className="text-2xl font-bold text-white font-headline">
-              The Minimalist Workspace
-            </h5>
-          </div>
         </div>
       </section>
 

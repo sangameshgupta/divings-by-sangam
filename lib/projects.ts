@@ -6,24 +6,41 @@ export interface Project {
   icons: string[];
   image?: string;
   link?: string;
+  cta?: string;
+  featured?: boolean;
 }
 
 export const projects: Project[] = [
   {
+    slug: "sift",
+    title: "Sift",
+    category: "Productivity",
+    description:
+      "An AI-powered email assistant that sits inside Gmail. It categorizes your inbox, sends you a daily brief, and lets you ask questions about your email history. Sift turns 2.5 hours of inbox chaos into a 2-minute morning routine.",
+    icons: ["mail", "smart_toy"],
+    image: "/images/sift-brand.png",
+    link: "https://usesift.work/landing",
+    featured: true,
+  },
+  {
     slug: "nexus",
     title: "Nexus",
-    category: "Automation",
+    category: "Intelligence",
     description:
-      "The central hub for personal data automation. A monolithic architecture designed to synchronize fragmented digital lives into a single, sovereign stream.",
+      "A personal AI assistant that lives in Telegram. It remembers context, stays available around the clock, and plugs into my daily workflows. Built on Railway, the Claude API, and a Supabase memory layer, Nexus is equal parts agentic architecture and productivity engine.",
     icons: ["database", "api"],
+    link: "https://sangameshgellagupta.substack.com/",
+    cta: "View Case Study",
   },
   {
     slug: "lumi",
     title: "Lumi",
-    category: "Visualization",
+    category: "Intelligence",
     description:
-      "Visualizing the hidden patterns in your workflow. Lumi dissects daily operational heat-maps to reveal where focus is lost and where momentum is built.",
+      "An AI-powered baby copilot built for my family. Instead of rigid app forms, we log feeding, sleep, and mood patterns through natural Telegram conversations. Lumi takes care of the logging, spots patterns, and sends proactive reminders. Built on Railway, Supabase, and the Claude API using the same agent-native architecture I apply at work.",
     icons: ["insights", "analytics"],
+    link: "https://sangameshgellagupta.substack.com/",
+    cta: "View Case Study",
   },
   {
     slug: "claude-code-salesforce-plugin",
@@ -38,10 +55,11 @@ export const projects: Project[] = [
   {
     slug: "hidden-automation-detector",
     title: "Hidden Automation Detector",
-    category: "Discovery",
+    category: "Chrome Extension",
     description:
       "Finding what's running behind the scenes. A forensic tool for identifying legacy scripts and forgotten cloud triggers that consume cycles and cloud budgets.",
     icons: ["search", "precision_manufacturing"],
+    image: "/images/hidden-automation-detector.png",
     link: "https://chromewebstore.google.com/detail/hidden-automation-detecto/onhocbkcepfapbmfnmkiopdofgnogpih",
   },
 ];
