@@ -1,0 +1,99 @@
+@import "tailwindcss";
+
+@theme inline {
+  /* ─── Surface Hierarchy (depth through tonal variation) ─── */
+  --color-surface: #121315;
+  --color-surface-dim: #121315;
+  --color-surface-container-lowest: #0d0e0f;
+  --color-surface-container-low: #1b1c1d;
+  --color-surface-container: #1f2021;
+  --color-surface-container-high: #292a2b;
+  --color-surface-container-highest: #343536;
+  --color-surface-bright: #38393a;
+  --color-surface-variant: #343536;
+  --color-surface-tint: #c0c1ff;
+
+  /* ─── Primary: Purple Accent ─── */
+  --color-primary: #c0c1ff;
+  --color-primary-container: #8083ff;
+  --color-primary-fixed: #e1e0ff;
+  --color-primary-fixed-dim: #c0c1ff;
+
+  /* ─── Secondary: Mint Green (AI/creative) ─── */
+  --color-secondary: #4edea3;
+  --color-secondary-container: #00a572;
+  --color-secondary-fixed: #6ffbbe;
+  --color-secondary-fixed-dim: #4edea3;
+
+  /* ─── On-Surface Text ─── */
+  --color-on-surface: #e3e2e3;
+  --color-on-surface-variant: #c7c4d7;
+  --color-on-background: #e3e2e3;
+  --color-on-primary: #1000a9;
+  --color-on-primary-container: #0d0096;
+  --color-on-secondary: #003824;
+  --color-on-secondary-container: #00311f;
+  --color-on-tertiary: #2d303b;
+
+  /* ─── Background ─── */
+  --color-background: #121315;
+
+  /* ─── Outline ─── */
+  --color-outline: #908fa0;
+  --color-outline-variant: #464554;
+
+  /* ─── Tertiary ─── */
+  --color-tertiary: #c4c5d5;
+  --color-tertiary-container: #8e909e;
+
+  /* ─── Error ─── */
+  --color-error: #ffb4ab;
+  --color-error-container: #93000a;
+
+  /* ─── Inverse ─── */
+  --color-inverse-surface: #e3e2e3;
+  --color-inverse-on-surface: #303032;
+  --color-inverse-primary: #494bd6;
+
+  /* ─── Typography ─── */
+  --font-headline: var(--font-inter), "Inter", sans-serif;
+  --font-body: var(--font-inter), "Inter", sans-serif;
+  --font-label: var(--font-space-grotesk), "Space Grotesk", monospace;
+
+  /* ─── Border Radius ─── */
+  --radius-sm: 0.125rem;
+  --radius-md: 0.25rem;
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.75rem;
+}
+
+/* ─── Custom Utilities ─── */
+@layer utilities {
+  .text-glow {
+    text-shadow: 0 0 30px rgba(192, 193, 255, 0.15);
+  }
+  .monolith-gradient {
+    background: linear-gradient(135deg, #c0c1ff 0%, #8083ff 100%);
+  }
+  .ghost-border {
+    border: 1px solid rgba(70, 69, 84, 0.2);
+  }
+}
+
+/* ─── Base Styles ─── */
+body {
+  background-color: var(--color-background);
+  color: var(--color-on-surface);
+  font-family: var(--font-body);
+}
+
+/* ─── Selection Colors ─── */
+::selection {
+  background-color: rgba(128, 131, 255, 0.3);
+  color: var(--color-primary-fixed);
+}
+
+/* ─── Material Symbols ─── */
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
