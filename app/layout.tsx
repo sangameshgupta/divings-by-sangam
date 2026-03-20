@@ -43,8 +43,14 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-dvh font-body antialiased">
+        <a
+          href="#main"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[60] focus:bg-primary-container focus:text-on-primary-container focus:px-4 focus:py-2 focus:rounded-md focus:font-bold"
+        >
+          Skip to content
+        </a>
         <Header />
-        <main className="pt-[72px] pb-24 md:pb-0">{children}</main>
+        <main id="main" className="pt-[72px] pb-24 md:pb-0">{children}</main>
         <Footer />
         <MobileNav />
       </body>

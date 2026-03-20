@@ -2,9 +2,9 @@ import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
   try {
-    const { name, intent, context } = await request.json();
+    const { name, email, intent, context } = await request.json();
 
-    if (!name || !context) {
+    if (!name || !email || !context) {
       return NextResponse.json(
         { error: "Name and context are required" },
         { status: 400 }
@@ -31,7 +31,7 @@ export async function POST(request: Request) {
     //   }),
     // });
 
-    console.log("Contact form submission:", { name, intent, context });
+    console.log("Contact form submission:", { name, email, intent, context });
 
     return NextResponse.json({ success: true });
   } catch {

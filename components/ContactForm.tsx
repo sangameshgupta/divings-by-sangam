@@ -18,6 +18,7 @@ export default function ContactForm() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name: data.get("name"),
+          email: data.get("email"),
           intent: data.get("intent"),
           context: data.get("context"),
         }),
@@ -66,6 +67,18 @@ export default function ContactForm() {
               className="w-full bg-surface-container-lowest border-none rounded-md px-4 py-3 text-on-surface placeholder:text-outline-variant focus:ring-1 focus:ring-primary-container transition-all outline-none"
               placeholder="Name or Organization"
               type="text"
+            />
+          </div>
+          <div>
+            <label className="block font-label text-[10px] text-on-surface-variant uppercase tracking-[0.2em] mb-2">
+              Your Email
+            </label>
+            <input
+              name="email"
+              required
+              className="w-full bg-surface-container-lowest border-none rounded-md px-4 py-3 text-on-surface placeholder:text-outline-variant focus:ring-1 focus:ring-primary-container transition-all outline-none"
+              placeholder="you@company.com"
+              type="email"
             />
           </div>
           <div>
