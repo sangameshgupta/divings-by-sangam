@@ -4,6 +4,8 @@ export interface Project {
   category: string;
   description: string;
   icons: string[];
+  image?: string;
+  link?: string;
 }
 
 export const projects: Project[] = [
@@ -30,6 +32,8 @@ export const projects: Project[] = [
     description:
       "AI-powered developer productivity. Bridging the gap between LLM reasoning and complex Salesforce metadata architectures through a native CLI integration.",
     icons: ["cloud", "code"],
+    image: "https://opengraph.githubassets.com/1/sangameshgupta/sf-compound-engineering-plugin",
+    link: "https://github.com/sangameshgupta/sf-compound-engineering-plugin",
   },
   {
     slug: "hidden-automation-detector",
@@ -38,5 +42,6 @@ export const projects: Project[] = [
     description:
       "Finding what's running behind the scenes. A forensic tool for identifying legacy scripts and forgotten cloud triggers that consume cycles and cloud budgets.",
     icons: ["search", "precision_manufacturing"],
+    link: "https://chromewebstore.google.com/detail/hidden-automation-detecto/onhocbkcepfapbmfnmkiopdofgnogpih",
   },
 ];

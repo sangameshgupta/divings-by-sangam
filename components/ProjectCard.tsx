@@ -1,10 +1,27 @@
+import Image from "next/image";
 import type { Project } from "@/lib/projects";
 
 export default function ProjectCard({ project }: { project: Project }) {
+  const Wrapper = project.link ? "a" : "div";
+  const linkProps = project.link
+    ? { href: project.link, target: "_blank" as const, rel: "noopener noreferrer" }
+    : {};
+
   return (
-    <article className="group relative flex flex-col bg-surface-container-low rounded-xl overflow-hidden transition-all duration-300 hover:ring-1 hover:ring-primary/20">
+    <Wrapper
+      {...linkProps}
+      className="group relative flex flex-col bg-surface-container-low rounded-xl overflow-hidden transition-all duration-300 hover:ring-1 hover:ring-primary/20"
+    >
       {/* Image Area */}
       <div className="aspect-video w-full bg-surface-container-highest relative overflow-hidden">
+        {project.image ? (
+          <Image
+            src={project.image}
+            alt={`${project.title} preview`}
+            fill
+            className="object-cover mix-blend-overlay grayscale group-hover:grayscale-0 transition-all duration-500"
+          />
+        ) : null}
         <div className="absolute inset-0 monolith-gradient opacity-10 group-hover:opacity-20 transition-opacity" />
         {/* Category Tag */}
         <div className="absolute top-6 left-6 z-10">
@@ -23,9 +40,9 @@ export default function ProjectCard({ project }: { project: Project }) {
           {project.description}
         </p>
         <div className="mt-auto flex items-center justify-between">
-          <span className="group/link inline-flex items-center gap-2 font-label text-xs tracking-[0.2em] uppercase text-primary font-bold cursor-pointer">
+          <span className="inline-flex items-center gap-2 font-label text-xs tracking-[0.2em] uppercase text-primary font-bold">
             View Project
-            <span className="material-symbols-outlined text-sm group-hover/link:translate-x-1 transition-transform">
+            <span className="material-symbols-outlined text-sm group-hover:translate-x-1 transition-transform">
               arrow_forward
             </span>
           </span>
@@ -41,6 +58,6 @@ export default function ProjectCard({ project }: { project: Project }) {
           </div>
         </div>
       </div>
-    </article>
+    </Wrapper>
   );
 }
