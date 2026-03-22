@@ -11,20 +11,20 @@ export default async function Home() {
       {/* ─── Hero Section ─── */}
       <section className="mb-32 pt-16">
         <div className="max-w-4xl">
-          <h1 className="text-6xl md:text-8xl lg:text-9xl font-black tracking-[-0.04em] leading-[0.9] text-on-surface mb-8 text-glow font-headline">
+          <h1 className="animate-fade-up stagger-1 text-6xl md:text-8xl lg:text-9xl font-black tracking-[-0.04em] leading-[0.9] text-on-surface mb-8 text-glow font-headline">
             Divings by Sangam
           </h1>
-          <div className="flex flex-col md:flex-row md:items-center gap-4 mb-12">
+          <div className="animate-fade-up stagger-2 flex flex-col md:flex-row md:items-center gap-4 mb-12">
             <span className="font-label text-sm uppercase tracking-[0.2em] py-1 px-3 bg-surface-container-highest text-secondary border-l-2 border-secondary inline-block">
               Builder + Writer + Salesforce/AI Consultant
             </span>
           </div>
-          <p className="text-xl md:text-2xl leading-relaxed text-on-surface-variant max-w-2xl font-light mb-12">
+          <p className="animate-fade-up stagger-3 text-xl md:text-2xl leading-relaxed text-on-surface-variant max-w-2xl font-light mb-12">
             Exploring the intersections of technology and creativity. A digital
             space dedicated to deep-dives into engineering complexity and the art
             of modern systems.
           </p>
-          <div className="flex flex-wrap gap-6">
+          <div className="animate-fade-up stagger-4 flex flex-wrap gap-6">
             <a
               className="group relative px-8 py-4 bg-primary-container text-on-primary-container rounded-md font-bold tracking-tight overflow-hidden transition-all active:scale-95"
               href="https://sangameshgellagupta.substack.com/"
@@ -50,7 +50,7 @@ export default async function Home() {
       </section>
 
       {/* ─── Bento Grid Section ─── */}
-      <section className="grid grid-cols-1 md:grid-cols-12 gap-6 mb-32">
+      <section className="animate-fade-up stagger-5 grid grid-cols-1 md:grid-cols-12 gap-6 mb-32">
         {/* Featured Writing */}
         <a
           href={latestPost?.link ?? "https://sangameshgellagupta.substack.com/"}
@@ -91,7 +91,7 @@ export default async function Home() {
       </section>
 
       {/* ─── Newsletter CTA ─── */}
-      <section className="mb-32">
+      <section className="animate-fade-up stagger-6 mb-32">
         <NewsletterSignup />
       </section>
     </div>

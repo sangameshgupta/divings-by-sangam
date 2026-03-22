@@ -51,18 +51,18 @@ export default function AboutPage() {
       <header className="mb-24 md:mb-32 pt-16">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
           <div className="max-w-2xl">
-            <p className="font-label text-xs tracking-[0.2em] text-secondary mb-4 uppercase">
+            <p className="animate-fade-up stagger-1 font-label text-xs tracking-[0.2em] text-secondary mb-4 uppercase">
               One Person Company
             </p>
-            <h1 className="text-6xl md:text-8xl font-black tracking-[-0.04em] leading-[0.9] text-on-surface mb-8 font-headline">
+            <h1 className="animate-fade-up stagger-2 text-6xl md:text-8xl font-black tracking-[-0.04em] leading-[0.9] text-on-surface mb-8 font-headline">
               The Story
             </h1>
-            <p className="text-lg md:text-xl text-on-surface-variant leading-relaxed max-w-lg">
+            <p className="animate-fade-up stagger-3 text-lg md:text-xl text-on-surface-variant leading-relaxed max-w-lg">
               A solo endeavor dedicated to the intersection of deep technical
               architecture and the art of digital storytelling.
             </p>
           </div>
-          <div className="w-full md:w-1/3 aspect-[4/5] bg-surface-container-low relative overflow-hidden group rounded-sm">
+          <div className="animate-slide-in-right stagger-3 w-full md:w-1/3 aspect-[4/5] bg-surface-container-low relative overflow-hidden group rounded-sm">
             <div className="absolute inset-0 w-full h-full scale-[1.08] origin-top">
               <Image
                 src="/images/main-profile-headshot.png"
@@ -78,7 +78,7 @@ export default function AboutPage() {
       </header>
 
       {/* ─── Triple Persona Grid ─── */}
-      <section className="grid grid-cols-1 md:grid-cols-3 gap-0 border-y border-outline-variant/10">
+      <section className="animate-fade-up stagger-4 grid grid-cols-1 md:grid-cols-3 gap-0 border-y border-outline-variant/10">
         {personas.map((persona, i) => (
           <div
             key={persona.label}
@@ -119,7 +119,7 @@ export default function AboutPage() {
       </section>
 
       {/* ─── Philosophy Section ─── */}
-      <section className="mt-24 md:mt-48 flex flex-col md:flex-row gap-16 items-start">
+      <section className="animate-fade-up stagger-5 mt-24 md:mt-48 flex flex-col md:flex-row gap-16 items-start">
         <div className="md:sticky md:top-32 w-full md:w-1/3">
           <h4 className="font-label text-xs tracking-[0.3em] uppercase text-outline mb-4">
             The Philosophy

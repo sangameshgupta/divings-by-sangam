@@ -18,20 +18,20 @@ export default async function WritingPage() {
       {/* ─── Hero Section ─── */}
       <section className="mb-24 pt-16">
         <div className="max-w-3xl">
-          <span className="font-label text-secondary tracking-[0.2em] text-xs uppercase mb-4 block">
+          <span className="animate-fade-up stagger-1 font-label text-secondary tracking-[0.2em] text-xs uppercase mb-4 block">
             Archive &amp; Insights
           </span>
-          <h1 className="text-6xl md:text-8xl font-black tracking-tighter mb-8 text-on-surface leading-[0.9] font-headline">
+          <h1 className="animate-fade-up stagger-2 text-6xl md:text-8xl font-black tracking-tighter mb-8 text-on-surface leading-[0.9] font-headline">
             Writing &amp;
             <br />
             Thoughts
           </h1>
-          <p className="text-xl text-outline font-light leading-relaxed mb-10 max-w-xl">
+          <p className="animate-fade-up stagger-3 text-xl text-outline font-light leading-relaxed mb-10 max-w-xl">
             Deep dives into Salesforce consulting, AI workflows,
             productivity, and the quiet pursuit of a balanced life.
           </p>
           <a
-            className="inline-flex items-center gap-3 bg-primary-container text-on-primary-container px-8 py-4 rounded-md font-bold transition-all hover:scale-[1.02] active:scale-95 group"
+            className="animate-fade-up stagger-4 inline-flex items-center gap-3 bg-primary-container text-on-primary-container px-8 py-4 rounded-md font-bold transition-all hover:scale-[1.02] active:scale-95 group"
             href="https://sangameshgellagupta.substack.com/"
             target="_blank"
             rel="noopener noreferrer"
@@ -45,7 +45,7 @@ export default async function WritingPage() {
       </section>
 
       {/* ─── Article Grid ─── */}
-      <section className="mb-32">
+      <section className="animate-fade-up stagger-5 mb-32">
         <div className="flex items-end justify-between mb-12">
           <div>
             <h2 className="text-3xl font-black tracking-tighter mb-2 font-headline">
