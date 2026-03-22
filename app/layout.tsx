@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     template: "%s | Divings by Sangam",
   },
   description:
-    "Exploring the intersections of technology and creativity. Deep dives into Salesforce, AI, and the art of modern systems.",
+    "Exploring the intersections of technology, creativity, and intentional living. Deep dives into Salesforce, AI, productivity, and life balance.",
 };
 
 export default function RootLayout({

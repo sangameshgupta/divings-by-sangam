@@ -5,7 +5,7 @@ import NewsletterSignup from "@/components/NewsletterSignup";
 export const metadata: Metadata = {
   title: "Writing",
   description:
-    "Deep dives into the intersection of Salesforce architecture, AI workflows, and the quiet pursuit of independent building.",
+    "Deep dives into Salesforce consulting, AI workflows, productivity, and the quiet pursuit of a balanced life.",
 };
 
 export default async function WritingPage() {
@@ -27,8 +27,8 @@ export default async function WritingPage() {
             Thoughts
           </h1>
           <p className="text-xl text-outline font-light leading-relaxed mb-10 max-w-xl">
-            Deep dives into the intersection of Salesforce architecture, AI
-            workflows, and the quiet pursuit of independent building.
+            Deep dives into Salesforce consulting, AI workflows,
+            productivity, and the quiet pursuit of a balanced life.
           </p>
           <a
             className="inline-flex items-center gap-3 bg-primary-container text-on-primary-container px-8 py-4 rounded-md font-bold transition-all hover:scale-[1.02] active:scale-95 group"
@@ -71,7 +71,7 @@ export default async function WritingPage() {
             </h3>
             <p className="text-on-surface-variant mb-6">
               Head over to Substack to read my latest articles on Salesforce, AI,
-              and building.
+              productivity, and life balance.
             </p>
             <a
               href="https://sangameshgellagupta.substack.com/"
@@ -145,31 +145,6 @@ export default async function WritingPage() {
                 </div>
               </a>
             ))}
-
-            {/* Newsletter CTA Card */}
-            <div className="md:col-span-4 bg-primary-container/10 p-8 flex flex-col justify-center items-center text-center border border-primary/20 rounded-sm">
-              <span
-                className="material-symbols-outlined text-4xl text-primary mb-4"
-                style={{ fontVariationSettings: "'FILL' 1" }}
-              >
-                subscriptions
-              </span>
-              <h3 className="text-xl font-bold mb-4 font-headline">
-                Never miss a deep dive.
-              </h3>
-              <p className="text-sm text-outline mb-6">
-                Join 1,200+ builders receiving weekly insights directly in their
-                inbox.
-              </p>
-              <a
-                className="text-sm font-label uppercase font-bold tracking-[0.2em] text-primary border-b-2 border-primary pb-1 hover:text-white hover:border-white transition-all"
-                href="https://sangameshgellagupta.substack.com/"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Join the Newsletter
-              </a>
-            </div>
           </div>
         )}
       </section>

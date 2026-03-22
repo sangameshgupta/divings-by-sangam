@@ -15,8 +15,8 @@ const personas = [
     description:
       "Developing robust, scalable solutions where code meets business logic. Specialized in creating architectural blueprints that withstand the test of growth.",
     tags: [
-      { text: "Salesforce Architect", accent: true },
-      { text: "Systems Design", accent: false },
+      { text: "Salesforce Consultant", accent: true },
+      { text: "Thinking in Systems", accent: false },
     ],
   },
   {
@@ -38,7 +38,7 @@ const personas = [
       "Bridging the gap between legacy CRM power and the frontier of Artificial Intelligence. High-level advisory for complex digital ecosystems.",
     tags: [
       { text: "AI Integration", accent: true },
-      { text: "Strategic Advisory", accent: false },
+      { text: "Strategic Consulting", accent: false },
     ],
   },
 ];
@@ -136,7 +136,7 @@ export default function AboutPage() {
             </p>
             <div className="mt-8 pt-8 border-t border-outline-variant/10 flex items-center justify-between">
               <span className="font-label text-[10px] tracking-[0.2em] uppercase text-outline">
-                Sangam &mdash; Founder, Divings
+                Gella Sangamesh Gupta &mdash; Founder, Divings
               </span>
               <span
                 className="material-symbols-outlined text-secondary"
@@ -154,7 +154,7 @@ export default function AboutPage() {
                 Salesforce Expertise
               </h5>
               <p className="text-on-surface-variant text-sm leading-relaxed">
-                Decade-plus experience navigating the world&apos;s most complex
+                5+ years navigating the world&apos;s most complex
                 CRM. From Core clouds to specialized industry verticals.
               </p>
             </div>

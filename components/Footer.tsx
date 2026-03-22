@@ -16,7 +16,7 @@ export default function Footer() {
             DIVINGS
           </Link>
           <p className="text-xs text-on-surface-variant font-label tracking-[0.2em]">
-            &copy; {new Date().getFullYear()} SANGAM GELLAGUPTA
+            &copy; {new Date().getFullYear()} GELLA SANGAMESH GUPTA
           </p>
         </div>
         <div className="flex gap-8">

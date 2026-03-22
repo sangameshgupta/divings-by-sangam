@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import ContactForm from "@/components/ContactForm";
+import TallyEmbed from "@/components/TallyEmbed";
 
 export const metadata: Metadata = {
   title: "Collaborate",
@@ -22,7 +22,7 @@ export default function CollaboratePage() {
           </h1>
           <p className="text-xl md:text-2xl text-on-surface-variant font-light max-w-2xl leading-relaxed">
             Open to joint builds, guest posts, and strategic partnerships. I
-            specialize in Salesforce architecture and AI-driven workflows.
+            specialize in Salesforce consulting and AI-driven workflows.
           </p>
         </div>
       </section>
@@ -79,7 +79,7 @@ export default function CollaboratePage() {
 
         {/* ─── Right Column: Contact Form ─── */}
         <div className="lg:col-span-5">
-          <ContactForm />
+          <TallyEmbed />
         </div>
       </div>
     </div>
