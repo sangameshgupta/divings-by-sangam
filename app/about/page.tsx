@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 
 export const metadata: Metadata = {
   title: "About",
@@ -62,12 +63,16 @@ export default function AboutPage() {
             </p>
           </div>
           <div className="w-full md:w-1/3 aspect-[4/5] bg-surface-container-low relative overflow-hidden group rounded-sm">
-            <div className="absolute inset-0 bg-surface-container-highest flex items-center justify-center">
-              <span className="material-symbols-outlined text-6xl text-on-surface/20">
-                person
-              </span>
+            <div className="absolute inset-0 w-full h-full scale-[1.08] origin-top">
+              <Image
+                src="/images/main-profile-headshot.png"
+                alt="Sangamesh Gupta"
+                fill
+                className="object-cover z-0 object-top"
+                priority
+              />
             </div>
-            <div className="absolute inset-0 ring-1 ring-inset ring-outline-variant/20" />
+            <div className="absolute inset-0 ring-1 ring-inset ring-outline-variant/20 z-10 pointer-events-none" />
           </div>
         </div>
       </header>
