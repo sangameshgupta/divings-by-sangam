@@ -5,6 +5,7 @@ const socialLinks = [
   { href: "https://www.youtube.com/@divingsbysangam", label: "YOUTUBE" },
   { href: "https://www.linkedin.com/in/gella-sangamesh-gupta-a35b5b1b8/", label: "LINKEDIN" },
   { href: "https://sangameshgellagupta.substack.com/", label: "SUBSTACK" },
+  { href: "https://discord.gg/sqzazDd8", label: "DISCORD" },
 ];
 
 export default function Footer() {
