@@ -33,16 +33,6 @@ export const projects: Project[] = [
     cta: "View Case Study",
   },
   {
-    slug: "lumi",
-    title: "Lumi",
-    category: "Intelligence",
-    description:
-      "An AI-powered baby copilot built for my family. Instead of rigid app forms, we log feeding, sleep, and mood patterns through natural Telegram conversations. Lumi takes care of the logging, spots patterns, and sends proactive reminders. Built on Railway, Supabase, and the Claude API using the same agent-native architecture I apply at work.",
-    icons: ["insights", "analytics"],
-    link: "https://sangameshgellagupta.substack.com/",
-    cta: "View Case Study",
-  },
-  {
     slug: "claude-code-salesforce-plugin",
     title: "Claude Code Salesforce Plugin",
     category: "Engineering",
