@@ -12,15 +12,13 @@ export interface Project {
 
 export const projects: Project[] = [
   {
-    slug: "sift",
-    title: "Sift",
-    category: "Productivity",
+    slug: "uat-trail",
+    title: "UAT Trail",
+    category: "Chrome Extension",
     description:
-      "An AI-powered email assistant that sits inside Gmail. It categorizes your inbox, sends you a daily brief, and lets you ask questions about your email history. Sift turns 2.5 hours of inbox chaos into a 2-minute morning routine.",
-    icons: ["mail", "smart_toy"],
-    image: "/images/sift-brand.png",
-    link: "https://usesift.work/landing",
-    featured: true,
+      "A clean evidence trail for Salesforce UAT. Captures field edits, button clicks, navigation events, and validation errors inside Lightning, then exports the session as Markdown or a self-contained HTML report — no OAuth, no servers, sensitive fields redacted by default.",
+    icons: ["fact_check", "extension"],
+    link: "https://chromewebstore.google.com/detail/dfgipkhapmpigflijmnppeijiidcdnof",
   },
   {
     slug: "nexus",
