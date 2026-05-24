@@ -8,6 +8,7 @@ const navItems = [
   { href: "/writing", icon: "subscriptions", label: "Writing" },
   { href: "/collaborate", icon: "share", label: "Collaborate" },
   { href: "/projects", icon: "terminal", label: "Projects" },
+  { href: "/learn", icon: "auto_stories", label: "Learn" },
   { href: "/about", icon: "link", label: "About" },
 ];
 
