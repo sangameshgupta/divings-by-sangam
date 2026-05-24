@@ -43,3 +43,7 @@ next-env.d.ts
 *.md
 unnamed.png
 docs/
+
+remotion/
+stitch/
+generated/

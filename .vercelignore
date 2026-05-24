@@ -1,0 +1,8 @@
+.next
+node_modules
+remotion
+generated
+stitch
+.docs
+.DS_Store
+unnamed.png
