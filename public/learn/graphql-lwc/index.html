@@ -28,11 +28,11 @@
     --border: #464554;            /* outline-variant */
     --border-soft: rgba(70, 69, 84, 0.45);
     --warn: #ffcf86;
-    --warn-bg: rgba(255, 207, 134, 0.08);
+    --warn-bg: rgba(255, 207, 134, 0.14);
     --danger: #ffb4ab;
-    --danger-bg: rgba(255, 180, 171, 0.08);
-    --info-bg: rgba(192, 193, 255, 0.08);
-    --success-bg: rgba(78, 222, 163, 0.08);
+    --danger-bg: rgba(255, 180, 171, 0.14);
+    --info-bg: rgba(192, 193, 255, 0.14);
+    --success-bg: rgba(78, 222, 163, 0.14);
     --code-bg: #0d0e0f;           /* surface-container-lowest */
     --code-text: #cdd6f4;
     --radius: 4px;                /* matches site rounded-sm (0.25rem) */
@@ -254,7 +254,7 @@
 <div class="divider"></div>
 
 <!-- SECTION 2: COMPONENT 1 -->
-<section id="component1" style="background:#fafbff;">
+<section id="component1" style="background:var(--surface-elevated);">
   <div class="container">
     <div class="comp-badge">🔷 Component 1</div>
     <div class="section-label">graphqlBasicDemo</div>
@@ -422,7 +422,7 @@ wiredResult; <span class="cm">// ← class property</span>
 <!-- SECTION 3: COMPONENT 2 -->
 <section id="component2">
   <div class="container">
-    <div class="comp-badge" style="background:#e6f4ea; border-color:#a8d5b5; color:#137333;">🏗️ Component 2</div>
+    <div class="comp-badge" style="background:var(--success-bg); border-color:var(--secondary); color:var(--secondary);">🏗️ Component 2</div>
     <div class="section-label">graphqlAccountWithChildren</div>
     <div class="section-title">Variables + Nested Children + displayValue</div>
     <p class="section-sub">A detail-page component that fetches one Account plus its related Contacts and Opportunities — all in a single GraphQL query. Introduces dynamic variables, nested child queries, and formatted display values.</p>
@@ -431,42 +431,42 @@ wiredResult; <span class="cm">// ← class property</span>
     <h3 style="font-size:17px; font-weight:700; color:var(--sf-dark); margin-bottom:14px;">New Concepts in This Component</h3>
     <div class="concept-list" style="margin-bottom:32px;">
       <div class="concept-item">
-        <div class="concept-dot" style="background:#0070d2;"></div>
+        <div class="concept-dot" style="background:var(--accent);"></div>
         <div class="concept-content">
           <strong>🎯 Variables ($accountId: ID!) — Dynamic Queries</strong>
           <p>Instead of hardcoding a filter value, you declare a variable with <code class="inline-code">$accountId: ID!</code> (the <code class="inline-code">!</code> means required). The value is passed at runtime via the <code class="inline-code">variables</code> option in <code class="inline-code">@wire</code>. This makes the query reusable for any record.</p>
         </div>
       </div>
       <div class="concept-item">
-        <div class="concept-dot" style="background:#04844b;"></div>
+        <div class="concept-dot" style="background:var(--secondary);"></div>
         <div class="concept-content">
           <strong>⚙️ variables: '$variables' — Reactive Wire Variables</strong>
           <p>The string <code class="inline-code">'$variables'</code> tells the wire framework to call <code class="inline-code">this.variables</code> getter reactively. When <code class="inline-code">this.recordId</code> changes (e.g. user navigates to another record), the getter returns a new value and the wire automatically re-runs the query.</p>
         </div>
       </div>
       <div class="concept-item">
-        <div class="concept-dot" style="background:#ff6600;"></div>
+        <div class="concept-dot" style="background:var(--warn);"></div>
         <div class="concept-content">
           <strong>🏠 Nested Child Queries — One Call, Three Objects</strong>
           <p>Inside the Account node, you can query related Contacts and Opportunities <em>directly</em>. This is the superpower of GraphQL — what would be 3 REST API calls becomes 1 GraphQL query. Each child relationship can have its own <code class="inline-code">first</code>, <code class="inline-code">orderBy</code>, and <code class="inline-code">where</code> arguments.</p>
         </div>
       </div>
       <div class="concept-item">
-        <div class="concept-dot" style="background:#9333ea;"></div>
+        <div class="concept-dot" style="background:#cba6f7;"></div>
         <div class="concept-content">
           <strong>💰 displayValue — Formatted vs Raw Value</strong>
           <p>Fields like <code class="inline-code">AnnualRevenue</code> and <code class="inline-code">Amount</code> support both <code class="inline-code">value</code> (raw number: 1500000) and <code class="inline-code">displayValue</code> (formatted string: "$1,500,000"). Use <code class="inline-code">displayValue</code> when showing to users, <code class="inline-code">value</code> for calculations.</p>
         </div>
       </div>
       <div class="concept-item">
-        <div class="concept-dot" style="background:#c5221f;"></div>
+        <div class="concept-dot" style="background:var(--danger);"></div>
         <div class="concept-content">
           <strong>🔢 totalCount — Count Without Mapping</strong>
           <p>Add <code class="inline-code">totalCount</code> alongside <code class="inline-code">edges</code> to get the total number of matching records (respects your where filter) without having to iterate. Useful for showing "37 Contacts" in a badge even if you only fetched the first 10.</p>
         </div>
       </div>
       <div class="concept-item">
-        <div class="concept-dot" style="background:#1e3a5f;"></div>
+        <div class="concept-dot" style="background:var(--text-faint);"></div>
         <div class="concept-content">
           <strong>📄 edges[0] — Single Record Pattern</strong>
           <p>On a detail page, your where clause filters to one record. The response still wraps it in <code class="inline-code">edges[0]</code> — GraphQL always returns a list. Access it with <code class="inline-code">data.uiapi.query.Account.edges[0]</code>. Always guard with a null check (<code class="inline-code">if (!edge)</code>).</p>
@@ -611,7 +611,7 @@ this.opportunities = node.Opportunities.edges.<span class="op">map</span>(e => (
 <!-- SECTION 3B: COMPONENT 3 — MUTATIONS -->
 <section id="component3">
   <div class="container">
-    <div class="comp-badge" style="background:#fce8e6; border-color:#f5c6c4; color:#c5221f;">⚡ Component 3</div>
+    <div class="comp-badge" style="background:var(--danger-bg); border-color:var(--danger); color:var(--danger);">⚡ Component 3</div>
     <div class="section-label">graphqlMutationsDemo</div>
     <div class="section-title">Native GraphQL Mutations — No uiRecordApi Needed</div>
     <p class="section-sub">The third evolution: instead of mixing GraphQL reads with uiRecordApi writes, this component does <strong>everything in GraphQL</strong> — including Create, Update, and Delete — using the newer <code class="inline-code">lightning/graphql</code> module and <code class="inline-code">executeMutation</code>.</p>
@@ -628,35 +628,35 @@ this.opportunities = node.Opportunities.edges.<span class="op">map</span>(e => (
     <h3 style="font-size:17px; font-weight:700; color:var(--sf-dark); margin-bottom:14px;">New Concepts in This Component</h3>
     <div class="concept-list" style="margin-bottom:32px;">
       <div class="concept-item">
-        <div class="concept-dot" style="background:#c5221f;"></div>
+        <div class="concept-dot" style="background:var(--danger);"></div>
         <div class="concept-content">
           <strong>⚡ executeMutation — Native GraphQL Writes</strong>
           <p>Instead of calling <code class="inline-code">createRecord() / updateRecord() / deleteRecord()</code> from uiRecordApi, you write a <code class="inline-code">mutation</code> GraphQL operation and execute it with <code class="inline-code">executeMutation({ query: mutation })</code>. The write goes through the GraphQL API end-to-end — same transport, same namespace, consistent mental model.</p>
         </div>
       </div>
       <div class="concept-item">
-        <div class="concept-dot" style="background:#0070d2;"></div>
+        <div class="concept-dot" style="background:var(--accent);"></div>
         <div class="concept-content">
           <strong>🔄 refresh from Wire Result (not refreshGraphQL import)</strong>
           <p>In Components 1 &amp; 2, you imported <code class="inline-code">refreshGraphQL</code> and called <code class="inline-code">refreshGraphQL(this.wiredResult)</code>. In this pattern, the wire result itself hands you a <code class="inline-code">refresh</code> function: <code class="inline-code">const { data, errors, refresh } = result</code>. Store it and call it directly: <code class="inline-code">await this.refreshGraphQL()</code>. Cleaner API.</p>
         </div>
       </div>
       <div class="concept-item">
-        <div class="concept-dot" style="background:#04844b;"></div>
+        <div class="concept-dot" style="background:var(--secondary);"></div>
         <div class="concept-content">
           <strong>🏗️ Mutation Structure — uiapi Namespace Again</strong>
           <p>Mutations live inside the same <code class="inline-code">uiapi { }</code> namespace. The pattern is: <code class="inline-code">ObjectCreate</code>, <code class="inline-code">ObjectUpdate</code>, <code class="inline-code">ObjectDelete</code>. Each takes an <code class="inline-code">input</code> argument and returns a <code class="inline-code">Record { }</code> with the created/updated fields — or just <code class="inline-code">Id</code> for deletes.</p>
         </div>
       </div>
       <div class="concept-item">
-        <div class="concept-dot" style="background:#9333ea;"></div>
+        <div class="concept-dot" style="background:#cba6f7;"></div>
         <div class="concept-content">
           <strong>🛡️ gqlString() — Safe Value Injection</strong>
           <p>Since values are interpolated directly into the <code class="inline-code">gql</code> template literal (e.g. <code class="inline-code">${safeName}</code>), you must escape them first. <code class="inline-code">JSON.stringify(raw)</code> wraps the value in quotes and escapes any special characters — preventing injection issues with names like <code class="inline-code">O'Brien "Co"</code>.</p>
         </div>
       </div>
       <div class="concept-item">
-        <div class="concept-dot" style="background:#1e3a5f;"></div>
+        <div class="concept-dot" style="background:var(--text-faint);"></div>
         <div class="concept-content">
           <strong>🗑️ LDS Auto-Prune on Delete</strong>
           <p>When you delete a record via GraphQL mutation, Salesforce's Lightning Data Service (LDS) cache automatically removes it from all active wire subscriptions. You don't need to call <code class="inline-code">refresh</code> after a delete — the list updates itself. (Calling refresh is still safe, just not required.)</p>
@@ -825,7 +825,7 @@ handleQuery(result) {
 <div class="divider"></div>
 
 <!-- SECTION 4: QUERY PATTERNS -->
-<section id="query-patterns" style="background:#fafbff;">
+<section id="query-patterns" style="background:var(--surface-elevated);">
   <div class="container">
     <div class="section-label">Reference</div>
     <div class="section-title">Query Patterns</div>
@@ -1153,7 +1153,7 @@ handleQuery(result) {
 <div class="divider"></div>
 
 <!-- SECTION 6: CHEAT SHEET -->
-<section id="cheatsheet" style="background:#fafbff;">
+<section id="cheatsheet" style="background:var(--surface-elevated);">
   <div class="container">
     <div class="section-label">Quick Reference</div>
     <div class="section-title">Cheat Sheet</div>
@@ -1184,7 +1184,7 @@ handleQuery(result) {
         <tr><td>Null-safe JS</td><td>field?.value ?? 'fallback'</td><td>Always use for nullable fields</td></tr>
         <tr><td>Force refresh</td><td>await refreshGraphQL(this.wiredResult)</td><td>Call after every create/update/delete</td></tr>
         <tr><td>Error handling</td><td>const { data, errors } = result</td><td>Check both — can have partial errors</td></tr>
-        <tr><td colspan="3" style="background:#f0f4ff; font-weight:700; color:var(--sf-dark); font-size:13px;">⚡ GraphQL Mutations (lightning/graphql module)</td></tr>
+        <tr><td colspan="3" style="background:var(--surface-bright); font-weight:700; color:var(--accent); font-size:13px;">⚡ GraphQL Mutations (lightning/graphql module)</td></tr>
         <tr><td>Mutation import</td><td>import { gql, graphql, executeMutation } from 'lightning/graphql'</td><td>Different module from uiGraphQLApi</td></tr>
         <tr><td>Refresh from wire</td><td>const { data, errors, refresh } = result; this.fn = refresh;</td><td>No need to import refreshGraphQL separately</td></tr>
         <tr><td>Create mutation</td><td>AccountCreate(input: { Account: { Name: "…" } }) { Record { Id } }</td><td>Inside uiapi { } namespace</td></tr>
