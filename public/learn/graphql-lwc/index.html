@@ -1,0 +1,1224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GraphQL in Salesforce LWC — Visual Teaching Guide</title>
+<style>
+  :root {
+    --sf-blue: #0070d2;
+    --sf-dark: #16325c;
+    --sf-teal: #04844b;
+    --sf-orange: #ff6600;
+    --sf-red: #c23934;
+    --sf-bg: #f3f2f2;
+    --card-bg: #ffffff;
+    --code-bg: #1e1e2e;
+    --code-text: #cdd6f4;
+    --text-main: #181818;
+    --text-muted: #54698d;
+    --border: #dddbda;
+    --radius: 10px;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Salesforce Sans', 'Segoe UI', sans-serif; background: var(--sf-bg); color: var(--text-main); line-height: 1.6; font-size: 15px; }
+
+  /* NAV */
+  nav { background: var(--sf-dark); position: sticky; top: 0; z-index: 100; padding: 0 32px; display: flex; align-items: center; gap: 0; height: 52px; box-shadow: 0 2px 8px rgba(0,0,0,.25); }
+  .nav-brand { color: white; font-weight: 700; font-size: 16px; margin-right: 32px; white-space: nowrap; }
+  .nav-brand span { color: #00a1e0; }
+  .nav-links { display: flex; gap: 0; overflow-x: auto; flex: 1; }
+  .nav-links a { color: rgba(255,255,255,0.75); text-decoration: none; padding: 0 16px; height: 52px; display: flex; align-items: center; font-size: 13.5px; font-weight: 500; border-bottom: 3px solid transparent; white-space: nowrap; transition: all 0.15s; }
+  .nav-links a:hover, .nav-links a.active { color: white; border-bottom-color: #00a1e0; }
+
+  /* HERO */
+  .hero { background: linear-gradient(135deg, var(--sf-dark) 0%, #032d60 60%, #0070d2 100%); padding: 64px 32px 56px; text-align: center; color: white; }
+  .hero-eyebrow { font-size: 12px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #7ec8e3; margin-bottom: 14px; }
+  .hero h1 { font-size: clamp(28px, 5vw, 48px); font-weight: 800; line-height: 1.15; margin-bottom: 16px; }
+  .hero h1 span { color: #7ec8e3; }
+  .hero p { font-size: 17px; color: rgba(255,255,255,0.8); max-width: 640px; margin: 0 auto 28px; }
+  .hero-chips { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+  .chip { background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.25); color: white; padding: 5px 14px; border-radius: 20px; font-size: 13px; font-weight: 500; }
+
+  /* LAYOUT */
+  .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+  section { padding: 56px 0; }
+  section:nth-child(even) > .container > .section-inner { /* no op */ }
+  .section-label { font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--sf-blue); margin-bottom: 8px; }
+  .section-title { font-size: clamp(22px, 3.5vw, 32px); font-weight: 800; color: var(--sf-dark); margin-bottom: 10px; }
+  .section-sub { font-size: 15px; color: var(--text-muted); max-width: 680px; margin-bottom: 36px; }
+  .divider { height: 1px; background: var(--border); margin: 0; }
+
+  /* CARDS */
+  .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 18px; }
+  .card { background: var(--card-bg); border: 1.5px solid var(--border); border-radius: var(--radius); padding: 22px; }
+  .card-icon { font-size: 26px; margin-bottom: 10px; }
+  .card h3 { font-size: 15px; font-weight: 700; margin-bottom: 6px; color: var(--sf-dark); }
+  .card p { font-size: 13.5px; color: var(--text-muted); line-height: 1.55; }
+  .card.highlight { border-color: var(--sf-blue); }
+  .card.highlight h3 { color: var(--sf-blue); }
+
+  /* CODE */
+  pre { background: var(--code-bg); border-radius: var(--radius); padding: 22px; overflow-x: auto; font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace; font-size: 13px; line-height: 1.75; color: var(--code-text); }
+  code { font-family: 'SF Mono', 'Fira Code', monospace; }
+  .inline-code { background: #eef2ff; color: #3730a3; padding: 2px 6px; border-radius: 4px; font-size: 13px; }
+  .kw { color: #cba6f7; } /* keyword */
+  .fn { color: #89b4fa; } /* function/field name */
+  .str { color: #a6e3a1; } /* string */
+  .num { color: #fab387; } /* number */
+  .cm { color: #6c7086; font-style: italic; } /* comment */
+  .op { color: #89dceb; } /* operator */
+  .val { color: #f9e2af; } /* value */
+
+  /* MAPPING */
+  .mapping-grid { display: grid; grid-template-columns: 1fr 48px 1fr 48px 1fr; gap: 0; align-items: start; }
+  .map-col { background: var(--card-bg); border: 1.5px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+  .map-col-header { background: var(--sf-dark); color: white; padding: 10px 16px; font-size: 12px; font-weight: 700; letter-spacing: 0.05em; }
+  .map-col pre { border-radius: 0; border-top: none; }
+  .map-arrow { display: flex; flex-direction: column; align-items: center; justify-content: center; padding-top: 56px; color: var(--sf-blue); font-size: 24px; gap: 4px; }
+  .map-arrow span { font-size: 11px; color: var(--text-muted); font-weight: 600; }
+
+  /* ANATOMY TABLE */
+  .anatomy-table { width: 100%; border-collapse: collapse; background: var(--card-bg); border-radius: var(--radius); overflow: hidden; border: 1.5px solid var(--border); }
+  .anatomy-table th { background: var(--sf-dark); color: white; padding: 12px 16px; text-align: left; font-size: 13px; }
+  .anatomy-table td { padding: 11px 16px; border-bottom: 1px solid var(--border); font-size: 13.5px; vertical-align: top; }
+  .anatomy-table tr:last-child td { border-bottom: none; }
+  .anatomy-table tr:hover td { background: #f0f6ff; }
+  .anatomy-table td:first-child { font-weight: 700; color: var(--sf-blue); white-space: nowrap; min-width: 150px; }
+  .anatomy-table td:nth-child(2) { font-family: monospace; font-size: 13px; color: #333; }
+  .anatomy-table td:nth-child(3) { color: var(--text-muted); font-size: 13px; }
+
+  /* TABS */
+  .tab-bar { display: flex; gap: 4px; border-bottom: 2px solid var(--border); margin-bottom: 20px; overflow-x: auto; }
+  .tab-btn { padding: 9px 18px; border: none; background: none; cursor: pointer; font-size: 14px; font-weight: 600; color: var(--text-muted); border-bottom: 3px solid transparent; margin-bottom: -2px; white-space: nowrap; transition: all 0.15s; }
+  .tab-btn:hover { color: var(--sf-blue); }
+  .tab-btn.active { color: var(--sf-blue); border-bottom-color: var(--sf-blue); }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* CALLOUT */
+  .callout { display: flex; gap: 14px; padding: 16px 20px; border-radius: var(--radius); margin: 20px 0; }
+  .callout.info { background: #e8f0fe; border-left: 4px solid var(--sf-blue); }
+  .callout.warn { background: #fff8e1; border-left: 4px solid #f9ab00; }
+  .callout.success { background: #e6f4ea; border-left: 4px solid var(--sf-teal); }
+  .callout.danger { background: #fce8e6; border-left: 4px solid var(--sf-red); }
+  .callout-icon { font-size: 20px; flex-shrink: 0; }
+  .callout-body { font-size: 13.5px; color: #333; line-height: 1.55; }
+  .callout-body strong { display: block; margin-bottom: 3px; font-size: 14px; }
+
+  /* FLOW STEPS */
+  .flow { display: flex; flex-direction: column; gap: 0; }
+  .flow-item { display: flex; gap: 20px; position: relative; }
+  .flow-item:not(:last-child)::before { content: ''; position: absolute; left: 19px; top: 44px; bottom: 0; width: 2px; background: #dde1e7; }
+  .flow-num { width: 40px; height: 40px; background: var(--sf-blue); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 15px; flex-shrink: 0; position: relative; z-index: 1; }
+  .flow-body { padding: 6px 0 28px; flex: 1; }
+  .flow-title { font-weight: 700; font-size: 15px; color: var(--sf-dark); margin-bottom: 4px; }
+  .flow-desc { font-size: 13.5px; color: var(--text-muted); margin-bottom: 10px; line-height: 1.55; }
+
+  /* CHEAT SHEET */
+  .cheat-table { width: 100%; border-collapse: collapse; background: var(--card-bg); border-radius: var(--radius); overflow: hidden; border: 1.5px solid var(--border); font-size: 13.5px; }
+  .cheat-table th { background: var(--sf-blue); color: white; padding: 11px 16px; text-align: left; }
+  .cheat-table td { padding: 10px 16px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  .cheat-table tr:last-child td { border-bottom: none; }
+  .cheat-table tr:nth-child(even) td { background: #f8f9fa; }
+  .cheat-table td:first-child { font-weight: 600; color: var(--sf-dark); width: 200px; }
+  .cheat-table td:nth-child(2) { font-family: monospace; font-size: 12.5px; color: #0070d2; background: #f0f4ff !important; }
+
+  /* COMPONENT BADGE */
+  .comp-badge { display: inline-flex; align-items: center; gap: 6px; background: #f0f4ff; border: 1.5px solid #c7d7fd; border-radius: 6px; padding: 4px 12px; font-size: 13px; font-weight: 600; color: #3730a3; margin-bottom: 16px; }
+
+  /* COMPARE TABLE */
+  .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .compare-card { background: var(--card-bg); border: 1.5px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+  .compare-card-header { padding: 14px 18px; font-weight: 700; font-size: 14px; display: flex; align-items: center; gap: 8px; }
+  .compare-card-header.blue { background: #e8f0fe; color: var(--sf-dark); }
+  .compare-card-header.green { background: #e6f4ea; color: #137333; }
+  .compare-card pre { border-radius: 0; }
+
+  /* NEW CONCEPTS */
+  .concept-list { display: flex; flex-direction: column; gap: 12px; }
+  .concept-item { background: var(--card-bg); border: 1.5px solid var(--border); border-radius: var(--radius); padding: 16px 20px; display: flex; gap: 14px; align-items: flex-start; }
+  .concept-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--sf-blue); flex-shrink: 0; margin-top: 5px; }
+  .concept-content { flex: 1; }
+  .concept-content strong { display: block; font-size: 14px; color: var(--sf-dark); margin-bottom: 3px; }
+  .concept-content p { font-size: 13.5px; color: var(--text-muted); line-height: 1.5; }
+
+  /* FOOTER */
+  footer { background: var(--sf-dark); color: rgba(255,255,255,0.65); text-align: center; padding: 32px; font-size: 13px; }
+  footer a { color: #7ec8e3; text-decoration: none; }
+
+  @media (max-width: 768px) {
+    .mapping-grid { grid-template-columns: 1fr; }
+    .map-arrow { flex-direction: row; padding-top: 0; padding: 8px 0; }
+    .compare-grid { grid-template-columns: 1fr; }
+    nav { padding: 0 16px; }
+    .hero { padding: 40px 16px 36px; }
+    section { padding: 36px 0; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-brand">⚡ <span>GraphQL</span> × LWC</div>
+  <div class="nav-links">
+    <a href="#mental-model" class="active">Mental Model</a>
+    <a href="#component1">Component 1 — Basic</a>
+    <a href="#component2">Component 2 — Children</a>
+    <a href="#component3">Component 3 — Mutations</a>
+    <a href="#query-patterns">Query Patterns</a>
+    <a href="#data-flow">Data Flow</a>
+    <a href="#cheatsheet">Cheat Sheet</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-eyebrow">Salesforce LWC · GraphQL API · Full Guide</div>
+  <h1>GraphQL in <span>Salesforce LWC</span><br>Explained Visually</h1>
+  <p>Two real components. Every concept broken down. From basic queries to nested children, variables, and live refresh.</p>
+  <div class="hero-chips">
+    <span class="chip">🔷 graphqlBasicDemo</span>
+    <span class="chip">🏗️ graphqlAccountWithChildren</span>
+    <span class="chip">⚡ graphqlMutationsDemo</span>
+    <span class="chip">lightning/graphql · API v66.0</span>
+  </div>
+</div>
+
+<!-- SECTION 1: MENTAL MODEL -->
+<section id="mental-model">
+  <div class="container">
+    <div class="section-label">Foundation</div>
+    <div class="section-title">The Mental Model</div>
+    <p class="section-sub">Before touching code, understand what GraphQL actually is and why it matters in Salesforce.</p>
+
+    <div class="card-grid" style="margin-bottom:28px;">
+      <div class="card highlight">
+        <div class="card-icon">🪞</div>
+        <h3>The Mirror Rule</h3>
+        <p><strong>Your query shape = your response shape.</strong> Whatever structure you write in the query, you get back data in that exact same shape. This is the #1 rule — everything else follows from it.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🍽️</div>
+        <h3>REST vs GraphQL</h3>
+        <p><strong>REST:</strong> You call <code class="inline-code">/api/accounts</code> and get 50+ fields back whether you want them or not.<br><br><strong>GraphQL:</strong> You ask for <em>exactly</em> Name + Industry. Server returns only those 2 fields. Surgical precision.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🗂️</div>
+        <h3>Salesforce's Namespace</h3>
+        <p>Salesforce wraps everything inside <code class="inline-code">uiapi → query</code>. Think of <code class="inline-code">uiapi</code> as the API gateway and <code class="inline-code">query</code> as the "read" section of the menu. Always the outer shell.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">📦</div>
+        <h3>The .value Quirk</h3>
+        <p>Unlike standard GraphQL where <code class="inline-code">Name</code> returns a string, Salesforce wraps fields: <code class="inline-code">Name { value }</code>. This is because Salesforce adds <code class="inline-code">displayValue</code> metadata too. Only <code class="inline-code">Id</code> is a plain string — no <code class="inline-code">{ value }</code> needed.</p>
+      </div>
+    </div>
+
+    <div class="callout info">
+      <div class="callout-icon">💡</div>
+      <div class="callout-body">
+        <strong>Salesforce GraphQL is READ-ONLY</strong>
+        The <code class="inline-code">@wire(graphql)</code> adapter is only for fetching data. For Create, Update, Delete — you still use <code class="inline-code">lightning/uiRecordApi</code> (<code class="inline-code">createRecord</code>, <code class="inline-code">updateRecord</code>, <code class="inline-code">deleteRecord</code>). After mutations, call <code class="inline-code">refreshGraphQL()</code> to re-sync the UI.
+      </div>
+    </div>
+  </div>
+</section>
+<div class="divider"></div>
+
+<!-- SECTION 2: COMPONENT 1 -->
+<section id="component1" style="background:#fafbff;">
+  <div class="container">
+    <div class="comp-badge">🔷 Component 1</div>
+    <div class="section-label">graphqlBasicDemo</div>
+    <div class="section-title">Basic Query + CRUD</div>
+    <p class="section-sub">Fetch a list of Accounts with GraphQL, display them in a table, and Create / Update / Delete via uiRecordApi.</p>
+
+    <!-- Query anatomy table -->
+    <h3 style="font-size:17px; font-weight:700; color:var(--sf-dark); margin-bottom:14px;">Query Dissection — Every Line Explained</h3>
+    <table class="anatomy-table" style="margin-bottom:28px;">
+      <thead><tr><th>Part</th><th>Code</th><th>What it means</th></tr></thead>
+      <tbody>
+        <tr><td>Operation</td><td>query AccountList { … }</td><td>Named GraphQL operation. Always name your queries — helps with debugging and caching.</td></tr>
+        <tr><td>API Gateway</td><td>uiapi { … }</td><td>Salesforce's root namespace. Every Salesforce GraphQL query starts here.</td></tr>
+        <tr><td>Read section</td><td>query { … }</td><td>Inside uiapi — signals "I'm reading data." (Not mutating.) The word query appears twice — outer is the operation type, inner is uiapi's read section.</td></tr>
+        <tr><td>Object + limit</td><td>Account(first: 10)</td><td>The sObject you're querying, and how many records max to return. Like SOQL LIMIT.</td></tr>
+        <tr><td>Sort</td><td>orderBy: { Name: { order: ASC } }</td><td>Sorts results ascending by Name. Like SOQL ORDER BY Name ASC.</td></tr>
+        <tr><td>List wrapper</td><td>edges { … }</td><td>GraphQL "connection" pattern. Wraps the list of results. Always required when fetching multiple records.</td></tr>
+        <tr><td>Single record</td><td>node { … }</td><td>Each individual record in the list. Like one row in a database result.</td></tr>
+        <tr><td>System field</td><td>Id</td><td>The record's Salesforce ID. Only field that returns a plain string — no { value } wrapper needed.</td></tr>
+        <tr><td>Standard field</td><td>Name { value }</td><td>All standard fields return an object with { value } (and optionally displayValue). Must unwrap in JS.</td></tr>
+        <tr><td>Optional field</td><td>Industry { value }</td><td>Nullable field. Use ?. in JS to safely access: Industry?.value ?? '—'</td></tr>
+      </tbody>
+    </table>
+
+    <!-- Query to Data mapping -->
+    <h3 style="font-size:17px; font-weight:700; color:var(--sf-dark); margin-bottom:14px;">The Mirror Rule in Action — Query → Response → Flat Array</h3>
+    <div class="mapping-grid" style="margin-bottom:28px;">
+      <div class="map-col">
+        <div class="map-col-header">📝 What you write</div>
+        <pre><span class="kw">query</span> <span class="fn">AccountList</span> {
+  <span class="fn">uiapi</span> {
+    <span class="fn">query</span> {
+      <span class="fn">Account</span>(first: <span class="num">10</span>) {
+        <span class="fn">edges</span> {
+          <span class="fn">node</span> {
+            <span class="fn">Id</span>
+            <span class="fn">Name</span> {
+              <span class="val">value</span>
+            }
+            <span class="fn">Industry</span> {
+              <span class="val">value</span>
+            }
+          }
+        }
+      }
+    }
+  }
+}</pre>
+      </div>
+      <div class="map-arrow">→<br><span>mirrors</span></div>
+      <div class="map-col">
+        <div class="map-col-header">📦 What comes back (data)</div>
+        <pre>{
+  <span class="str">"uiapi"</span>: {
+    <span class="str">"query"</span>: {
+      <span class="str">"Account"</span>: {
+        <span class="str">"edges"</span>: [
+          {
+            <span class="str">"node"</span>: {
+              <span class="str">"Id"</span>: <span class="val">"001..."</span>,
+              <span class="str">"Name"</span>: {
+                <span class="val">"value"</span>: <span class="val">"Acme Corp"</span>
+              },
+              <span class="str">"Industry"</span>: {
+                <span class="val">"value"</span>: <span class="val">"Technology"</span>
+              }
+            }
+          }
+        ]
+      }
+    }
+  }
+}</pre>
+      </div>
+      <div class="map-arrow">→<br><span>.map()</span></div>
+      <div class="map-col">
+        <div class="map-col-header">🎯 After .map() in JS</div>
+        <pre><span class="cm">// Clean flat array:</span>
+[
+  {
+    <span class="fn">Id</span>: <span class="val">"001..."</span>,
+    <span class="fn">Name</span>: <span class="val">"Acme Corp"</span>,
+    <span class="fn">Industry</span>: <span class="val">"Technology"</span>
+  },
+  ...
+]
+
+<span class="cm">// Template uses clean names:</span>
+{acct.Name}
+{acct.Industry}
+<span class="cm">// No acct.Name.value needed!</span></pre>
+      </div>
+    </div>
+
+    <!-- The .map() code -->
+    <h3 style="font-size:17px; font-weight:700; color:var(--sf-dark); margin-bottom:12px;">The .map() — "Flattening" the response</h3>
+    <pre style="margin-bottom:28px;"><span class="cm">// data.uiapi.query.Account.edges is an array of { node: {...} } objects</span>
+<span class="cm">// .map() loops through each edge and extracts what we need:</span>
+
+this.accounts = data.uiapi.query.Account.edges.<span class="op">map</span>(edge => ({
+  <span class="fn">Id</span>:       edge.node.Id,                       <span class="cm">// Id = plain string, no .value</span>
+  <span class="fn">Name</span>:     edge.node.Name.<span class="val">value</span>,              <span class="cm">// unwrap .value → "Acme Corp"</span>
+  <span class="fn">Industry</span>: edge.node.Industry?.<span class="val">value</span> ?? <span class="str">'—'</span>  <span class="cm">// ?. handles null, ?? sets fallback</span>
+}));</pre>
+
+    <!-- CRUD Pattern -->
+    <h3 style="font-size:17px; font-weight:700; color:var(--sf-dark); margin-bottom:12px;">CRUD Pattern — Write via uiRecordApi, then Refresh</h3>
+    <div class="tab-bar">
+      <button class="tab-btn active" onclick="showTab('c1', 'create', this)">Create</button>
+      <button class="tab-btn" onclick="showTab('c1', 'update', this)">Update</button>
+      <button class="tab-btn" onclick="showTab('c1', 'delete', this)">Delete</button>
+      <button class="tab-btn" onclick="showTab('c1', 'refresh', this)">Refresh Pattern</button>
+    </div>
+    <div id="c1-create" class="tab-panel active">
+      <pre><span class="kw">import</span> { createRecord } <span class="kw">from</span> <span class="str">'lightning/uiRecordApi'</span>;
+
+<span class="kw">async</span> <span class="fn">handleCreate</span>() {
+  <span class="kw">await</span> createRecord({
+    apiName: <span class="str">'Account'</span>,
+    fields: { Name: this.newName.trim() }
+  });
+  <span class="kw">await</span> refreshGraphQL(this.wiredResult); <span class="cm">// re-run the @wire query</span>
+}</pre>
+    </div>
+    <div id="c1-update" class="tab-panel">
+      <pre><span class="kw">import</span> { updateRecord } <span class="kw">from</span> <span class="str">'lightning/uiRecordApi'</span>;
+
+<span class="kw">async</span> <span class="fn">handleUppercase</span>(event) {
+  <span class="kw">const</span> id = event.target.dataset.id;
+  <span class="kw">const</span> current = this.accounts.find(a => a.Id === id);
+  <span class="kw">await</span> updateRecord({
+    fields: { Id: id, Name: current.Name.toUpperCase() }
+  });
+  <span class="kw">await</span> refreshGraphQL(this.wiredResult);
+}</pre>
+    </div>
+    <div id="c1-delete" class="tab-panel">
+      <pre><span class="kw">import</span> { deleteRecord } <span class="kw">from</span> <span class="str">'lightning/uiRecordApi'</span>;
+
+<span class="kw">async</span> <span class="fn">handleDelete</span>(event) {
+  <span class="kw">const</span> id = event.target.dataset.id;
+  <span class="kw">await</span> deleteRecord(id);
+  <span class="kw">await</span> refreshGraphQL(this.wiredResult); <span class="cm">// sync the list</span>
+}</pre>
+    </div>
+    <div id="c1-refresh" class="tab-panel">
+      <pre><span class="cm">// KEY PATTERN: Always store the wire result for later refresh</span>
+
+wiredResult; <span class="cm">// ← class property</span>
+
+<span class="op">@wire</span>(graphql, { query: gql`...` })
+<span class="fn">handleQuery</span>(result) {
+  this.wiredResult = result; <span class="cm">// ← store it HERE</span>
+  <span class="kw">const</span> { data, errors } = result;
+  <span class="cm">// ... process data</span>
+}
+
+<span class="cm">// Later, after any mutation:</span>
+<span class="kw">await</span> refreshGraphQL(this.wiredResult); <span class="cm">// ← use stored ref</span></pre>
+    </div>
+  </div>
+</section>
+<div class="divider"></div>
+
+<!-- SECTION 3: COMPONENT 2 -->
+<section id="component2">
+  <div class="container">
+    <div class="comp-badge" style="background:#e6f4ea; border-color:#a8d5b5; color:#137333;">🏗️ Component 2</div>
+    <div class="section-label">graphqlAccountWithChildren</div>
+    <div class="section-title">Variables + Nested Children + displayValue</div>
+    <p class="section-sub">A detail-page component that fetches one Account plus its related Contacts and Opportunities — all in a single GraphQL query. Introduces dynamic variables, nested child queries, and formatted display values.</p>
+
+    <!-- New concepts introduced -->
+    <h3 style="font-size:17px; font-weight:700; color:var(--sf-dark); margin-bottom:14px;">New Concepts in This Component</h3>
+    <div class="concept-list" style="margin-bottom:32px;">
+      <div class="concept-item">
+        <div class="concept-dot" style="background:#0070d2;"></div>
+        <div class="concept-content">
+          <strong>🎯 Variables ($accountId: ID!) — Dynamic Queries</strong>
+          <p>Instead of hardcoding a filter value, you declare a variable with <code class="inline-code">$accountId: ID!</code> (the <code class="inline-code">!</code> means required). The value is passed at runtime via the <code class="inline-code">variables</code> option in <code class="inline-code">@wire</code>. This makes the query reusable for any record.</p>
+        </div>
+      </div>
+      <div class="concept-item">
+        <div class="concept-dot" style="background:#04844b;"></div>
+        <div class="concept-content">
+          <strong>⚙️ variables: '$variables' — Reactive Wire Variables</strong>
+          <p>The string <code class="inline-code">'$variables'</code> tells the wire framework to call <code class="inline-code">this.variables</code> getter reactively. When <code class="inline-code">this.recordId</code> changes (e.g. user navigates to another record), the getter returns a new value and the wire automatically re-runs the query.</p>
+        </div>
+      </div>
+      <div class="concept-item">
+        <div class="concept-dot" style="background:#ff6600;"></div>
+        <div class="concept-content">
+          <strong>🏠 Nested Child Queries — One Call, Three Objects</strong>
+          <p>Inside the Account node, you can query related Contacts and Opportunities <em>directly</em>. This is the superpower of GraphQL — what would be 3 REST API calls becomes 1 GraphQL query. Each child relationship can have its own <code class="inline-code">first</code>, <code class="inline-code">orderBy</code>, and <code class="inline-code">where</code> arguments.</p>
+        </div>
+      </div>
+      <div class="concept-item">
+        <div class="concept-dot" style="background:#9333ea;"></div>
+        <div class="concept-content">
+          <strong>💰 displayValue — Formatted vs Raw Value</strong>
+          <p>Fields like <code class="inline-code">AnnualRevenue</code> and <code class="inline-code">Amount</code> support both <code class="inline-code">value</code> (raw number: 1500000) and <code class="inline-code">displayValue</code> (formatted string: "$1,500,000"). Use <code class="inline-code">displayValue</code> when showing to users, <code class="inline-code">value</code> for calculations.</p>
+        </div>
+      </div>
+      <div class="concept-item">
+        <div class="concept-dot" style="background:#c5221f;"></div>
+        <div class="concept-content">
+          <strong>🔢 totalCount — Count Without Mapping</strong>
+          <p>Add <code class="inline-code">totalCount</code> alongside <code class="inline-code">edges</code> to get the total number of matching records (respects your where filter) without having to iterate. Useful for showing "37 Contacts" in a badge even if you only fetched the first 10.</p>
+        </div>
+      </div>
+      <div class="concept-item">
+        <div class="concept-dot" style="background:#1e3a5f;"></div>
+        <div class="concept-content">
+          <strong>📄 edges[0] — Single Record Pattern</strong>
+          <p>On a detail page, your where clause filters to one record. The response still wraps it in <code class="inline-code">edges[0]</code> — GraphQL always returns a list. Access it with <code class="inline-code">data.uiapi.query.Account.edges[0]</code>. Always guard with a null check (<code class="inline-code">if (!edge)</code>).</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Full query with annotations -->
+    <h3 style="font-size:17px; font-weight:700; color:var(--sf-dark); margin-bottom:12px;">The Full Query — Annotated</h3>
+    <pre style="margin-bottom:28px;"><span class="cm">// $accountId: ID! declares a required variable of type Salesforce ID</span>
+<span class="kw">query</span> <span class="fn">AccountDetail</span>(<span class="val">$accountId</span>: ID!) {
+  uiapi {
+    query {
+      <span class="cm">// where: { Id: { eq: $accountId } } → runtime variable injected here</span>
+      Account(where: { Id: { eq: <span class="val">$accountId</span> } }) {
+        edges {
+          node {
+            Id
+            Name { value }
+            Industry { value }
+            AnnualRevenue {
+              value          <span class="cm">// raw: 1500000</span>
+              displayValue   <span class="cm">// formatted: "$1,500,000" ← show this to users</span>
+            }
+
+            <span class="cm">// ↓ NESTED CHILD QUERY — Contacts related to this Account</span>
+            Contacts(
+              first: <span class="num">50</span>
+              orderBy: { LastName: { order: ASC } }
+            ) {
+              edges {
+                node {
+                  Id
+                  Name { value }
+                  Title { value }
+                  Email { value }
+                }
+              }
+              totalCount  <span class="cm">// total contacts, even if first: 50 limits display</span>
+            }
+
+            <span class="cm">// ↓ NESTED CHILD QUERY — Opportunities related to this Account</span>
+            Opportunities(
+              first: <span class="num">50</span>
+              orderBy: { CloseDate: { order: DESC } }
+            ) {
+              edges {
+                node {
+                  Id
+                  Name { value }
+                  StageName { value }
+                  Amount {
+                    value         <span class="cm">// raw number for calculations</span>
+                    displayValue  <span class="cm">// "$250,000" for display</span>
+                  }
+                  CloseDate {
+                    value         <span class="cm">// "2025-06-30" (ISO)</span>
+                    displayValue  <span class="cm">// "6/30/2025" (locale-formatted)</span>
+                  }
+                }
+              }
+              totalCount
+            }
+          }
+        }
+      }
+    }
+  }
+}</pre>
+
+    <!-- Variables pattern -->
+    <h3 style="font-size:17px; font-weight:700; color:var(--sf-dark); margin-bottom:12px;">Variables Pattern — How $accountId Gets Its Value</h3>
+    <div class="compare-grid" style="margin-bottom:28px;">
+      <div class="compare-card">
+        <div class="compare-card-header blue">In the Component JS</div>
+        <pre><span class="op">@api</span> recordId; <span class="cm">// platform sets this automatically</span>
+
+<span class="cm">// Getter returns variables object</span>
+<span class="kw">get</span> <span class="fn">variables</span>() {
+  <span class="kw">return</span> { accountId: this.recordId };
+}
+
+<span class="cm">// '$variables' tells wire to call this.variables</span>
+<span class="op">@wire</span>(graphql, {
+  query: gql`query AccountDetail($accountId: ID!) { ... }`,
+  variables: <span class="str">'$variables'</span>  <span class="cm">// ← the reactive link</span>
+})
+<span class="fn">handleResult</span>(result) { ... }</pre>
+      </div>
+      <div class="compare-card">
+        <div class="compare-card-header green">What happens at runtime</div>
+        <pre><span class="cm">// User is on Account record: 001abc123...</span>
+<span class="cm">// Platform sets: this.recordId = "001abc123..."</span>
+
+<span class="cm">// variables getter returns:</span>
+{ accountId: <span class="str">"001abc123..."</span> }
+
+<span class="cm">// Wire runs query with:</span>
+where: { Id: { eq: <span class="str">"001abc123..."</span> } }
+
+<span class="cm">// User navigates to different record?</span>
+<span class="cm">// recordId changes → getter returns new value</span>
+<span class="cm">// → wire auto-reruns! No manual refresh needed.</span></pre>
+      </div>
+    </div>
+
+    <!-- Response mapping for component 2 -->
+    <h3 style="font-size:17px; font-weight:700; color:var(--sf-dark); margin-bottom:12px;">Mapping the Nested Response</h3>
+    <pre><span class="kw">const</span> edge = data.uiapi.query.Account.edges[<span class="num">0</span>]; <span class="cm">// detail page = one record</span>
+<span class="kw">if</span> (!edge) { this.error = <span class="str">'Account not found.'</span>; <span class="kw">return</span>; }
+
+<span class="kw">const</span> node = edge.node;
+
+<span class="cm">// 1. Parent account</span>
+this.account = {
+  Id:       node.Id,
+  Name:     node.Name.value,
+  Industry: node.Industry?.<span class="val">value</span> ?? <span class="str">'—'</span>,
+  Revenue:  node.AnnualRevenue?.<span class="val">displayValue</span> ?? <span class="str">'—'</span>  <span class="cm">// displayValue = "$1,500,000"</span>
+};
+
+<span class="cm">// 2. Child contacts — nested edges.map() inside parent node</span>
+this.contacts = node.Contacts.edges.<span class="op">map</span>(e => ({
+  Id:    e.node.Id,
+  Name:  e.node.Name?.<span class="val">value</span> ?? <span class="str">'—'</span>,
+  Title: e.node.Title?.<span class="val">value</span> ?? <span class="str">'—'</span>,
+  Email: e.node.Email?.<span class="val">value</span> ?? <span class="str">'—'</span>
+}));
+
+<span class="cm">// 3. Child opportunities</span>
+this.opportunities = node.Opportunities.edges.<span class="op">map</span>(e => ({
+  Id:        e.node.Id,
+  Name:      e.node.Name?.<span class="val">value</span> ?? <span class="str">'—'</span>,
+  StageName: e.node.StageName?.<span class="val">value</span> ?? <span class="str">'—'</span>,
+  Amount:    e.node.Amount?.<span class="val">displayValue</span> ?? <span class="str">'—'</span>,   <span class="cm">// "$250,000"</span>
+  CloseDate: e.node.CloseDate?.<span class="val">displayValue</span> ?? <span class="str">'—'</span>  <span class="cm">// "6/30/2025"</span>
+}));</pre>
+  </div>
+</section>
+<div class="divider"></div>
+
+<!-- SECTION 3B: COMPONENT 3 — MUTATIONS -->
+<section id="component3">
+  <div class="container">
+    <div class="comp-badge" style="background:#fce8e6; border-color:#f5c6c4; color:#c5221f;">⚡ Component 3</div>
+    <div class="section-label">graphqlMutationsDemo</div>
+    <div class="section-title">Native GraphQL Mutations — No uiRecordApi Needed</div>
+    <p class="section-sub">The third evolution: instead of mixing GraphQL reads with uiRecordApi writes, this component does <strong>everything in GraphQL</strong> — including Create, Update, and Delete — using the newer <code class="inline-code">lightning/graphql</code> module and <code class="inline-code">executeMutation</code>.</p>
+
+    <div class="callout warn" style="margin-bottom:28px;">
+      <div class="callout-icon">🔄</div>
+      <div class="callout-body">
+        <strong>Module change: lightning/graphql vs lightning/uiGraphQLApi</strong>
+        Components 1 &amp; 2 import from <code class="inline-code">lightning/uiGraphQLApi</code>. This component imports from <code class="inline-code">lightning/graphql</code> — a newer module that adds <code class="inline-code">executeMutation</code> support and a different refresh mechanism. The <code class="inline-code">@wire(graphql)</code> syntax is the same; what changes is how you refresh and how you write data.
+      </div>
+    </div>
+
+    <!-- New concepts -->
+    <h3 style="font-size:17px; font-weight:700; color:var(--sf-dark); margin-bottom:14px;">New Concepts in This Component</h3>
+    <div class="concept-list" style="margin-bottom:32px;">
+      <div class="concept-item">
+        <div class="concept-dot" style="background:#c5221f;"></div>
+        <div class="concept-content">
+          <strong>⚡ executeMutation — Native GraphQL Writes</strong>
+          <p>Instead of calling <code class="inline-code">createRecord() / updateRecord() / deleteRecord()</code> from uiRecordApi, you write a <code class="inline-code">mutation</code> GraphQL operation and execute it with <code class="inline-code">executeMutation({ query: mutation })</code>. The write goes through the GraphQL API end-to-end — same transport, same namespace, consistent mental model.</p>
+        </div>
+      </div>
+      <div class="concept-item">
+        <div class="concept-dot" style="background:#0070d2;"></div>
+        <div class="concept-content">
+          <strong>🔄 refresh from Wire Result (not refreshGraphQL import)</strong>
+          <p>In Components 1 &amp; 2, you imported <code class="inline-code">refreshGraphQL</code> and called <code class="inline-code">refreshGraphQL(this.wiredResult)</code>. In this pattern, the wire result itself hands you a <code class="inline-code">refresh</code> function: <code class="inline-code">const { data, errors, refresh } = result</code>. Store it and call it directly: <code class="inline-code">await this.refreshGraphQL()</code>. Cleaner API.</p>
+        </div>
+      </div>
+      <div class="concept-item">
+        <div class="concept-dot" style="background:#04844b;"></div>
+        <div class="concept-content">
+          <strong>🏗️ Mutation Structure — uiapi Namespace Again</strong>
+          <p>Mutations live inside the same <code class="inline-code">uiapi { }</code> namespace. The pattern is: <code class="inline-code">ObjectCreate</code>, <code class="inline-code">ObjectUpdate</code>, <code class="inline-code">ObjectDelete</code>. Each takes an <code class="inline-code">input</code> argument and returns a <code class="inline-code">Record { }</code> with the created/updated fields — or just <code class="inline-code">Id</code> for deletes.</p>
+        </div>
+      </div>
+      <div class="concept-item">
+        <div class="concept-dot" style="background:#9333ea;"></div>
+        <div class="concept-content">
+          <strong>🛡️ gqlString() — Safe Value Injection</strong>
+          <p>Since values are interpolated directly into the <code class="inline-code">gql</code> template literal (e.g. <code class="inline-code">${safeName}</code>), you must escape them first. <code class="inline-code">JSON.stringify(raw)</code> wraps the value in quotes and escapes any special characters — preventing injection issues with names like <code class="inline-code">O'Brien "Co"</code>.</p>
+        </div>
+      </div>
+      <div class="concept-item">
+        <div class="concept-dot" style="background:#1e3a5f;"></div>
+        <div class="concept-content">
+          <strong>🗑️ LDS Auto-Prune on Delete</strong>
+          <p>When you delete a record via GraphQL mutation, Salesforce's Lightning Data Service (LDS) cache automatically removes it from all active wire subscriptions. You don't need to call <code class="inline-code">refresh</code> after a delete — the list updates itself. (Calling refresh is still safe, just not required.)</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Import comparison -->
+    <h3 style="font-size:17px; font-weight:700; color:var(--sf-dark); margin-bottom:12px;">Import: lightning/graphql vs lightning/uiGraphQLApi</h3>
+    <div class="compare-grid" style="margin-bottom:28px;">
+      <div class="compare-card">
+        <div class="compare-card-header blue">Components 1 &amp; 2 (uiGraphQLApi)</div>
+        <pre><span class="kw">import</span> { gql, graphql, refreshGraphQL }
+  <span class="kw">from</span> <span class="str">'lightning/uiGraphQLApi'</span>;
+
+<span class="cm">// Refresh: pass stored result reference</span>
+wiredResult;
+handleQuery(result) {
+  this.wiredResult = result;
+}
+<span class="kw">await</span> refreshGraphQL(this.wiredResult);
+
+<span class="cm">// Write: use separate uiRecordApi</span>
+<span class="kw">import</span> { createRecord } <span class="kw">from</span> <span class="str">'lightning/uiRecordApi'</span>;</pre>
+      </div>
+      <div class="compare-card">
+        <div class="compare-card-header green">Component 3 (lightning/graphql)</div>
+        <pre><span class="kw">import</span> { gql, graphql, executeMutation }
+  <span class="kw">from</span> <span class="str">'lightning/graphql'</span>;
+
+<span class="cm">// Refresh: function comes FROM wire result</span>
+refreshGraphQL;
+handleQuery(result) {
+  <span class="kw">const</span> { data, errors, <span class="val">refresh</span> } = result;
+  <span class="kw">if</span> (refresh) this.refreshGraphQL = refresh;
+}
+<span class="kw">await</span> this.refreshGraphQL?.();
+
+<span class="cm">// Write: executeMutation — no uiRecordApi!</span></pre>
+      </div>
+    </div>
+
+    <!-- Mutation anatomy -->
+    <h3 style="font-size:17px; font-weight:700; color:var(--sf-dark); margin-bottom:12px;">Mutation Anatomy — All Three Operations</h3>
+    <div class="tab-bar">
+      <button class="tab-btn active" onclick="showTab('m3', 'create', this)">Create</button>
+      <button class="tab-btn" onclick="showTab('m3', 'update', this)">Update</button>
+      <button class="tab-btn" onclick="showTab('m3', 'delete', this)">Delete</button>
+      <button class="tab-btn" onclick="showTab('m3', 'safety', this)">String Safety</button>
+    </div>
+    <div id="m3-create" class="tab-panel active">
+      <pre><span class="cm">// 1. Escape user input first — NEVER inject raw strings</span>
+<span class="kw">const</span> safeName = <span class="fn">JSON.stringify</span>(this.newName.trim()); <span class="cm">// "Acme Corp" → '"Acme Corp"'</span>
+
+<span class="cm">// 2. Build the mutation using template literal injection</span>
+<span class="kw">const</span> mutation = gql`
+  <span class="kw">mutation</span> <span class="fn">CreateAccount</span> {
+    uiapi {
+      <span class="fn">AccountCreate</span>(input: {        <span class="cm">// ObjectCreate pattern</span>
+        Account: { Name: ${`${`${`<span class="val">safeName</span>`}`}`} }      <span class="cm">// injected as: "Acme Corp"</span>
+      }) {
+        Record {                     <span class="cm">// returns the newly created record</span>
+          Id
+          Name { value }
+        }
+      }
+    }
+  }
+\`;
+
+<span class="cm">// 3. Execute and handle errors</span>
+<span class="kw">const</span> result = <span class="kw">await</span> executeMutation({ query: mutation });
+<span class="kw">if</span> (result?.errors?.length) <span class="kw">throw new</span> Error(result.errors[<span class="num">0</span>].message);
+
+<span class="cm">// 4. Refresh the wire query to show the new record</span>
+<span class="kw">await</span> this.refreshGraphQL?.();</pre>
+    </div>
+    <div id="m3-update" class="tab-panel">
+      <pre><span class="cm">// Update requires both Id + the fields to change</span>
+<span class="kw">const</span> safeId   = <span class="fn">JSON.stringify</span>(id);
+<span class="kw">const</span> safeName = <span class="fn">JSON.stringify</span>(current.Name.toUpperCase());
+
+<span class="kw">const</span> mutation = gql`
+  <span class="kw">mutation</span> <span class="fn">UpdateAccount</span> {
+    uiapi {
+      <span class="fn">AccountUpdate</span>(input: {        <span class="cm">// ObjectUpdate pattern</span>
+        Id: ${`${`${`<span class="val">safeId</span>`}`}`},                  <span class="cm">// which record to update</span>
+        Account: { Name: ${`${`${`<span class="val">safeName</span>`}`}`} }  <span class="cm">// what to change</span>
+      }) {
+        Record {                     <span class="cm">// returns the updated record</span>
+          Id
+          Name { value }
+        }
+      }
+    }
+  }
+\`;
+
+<span class="kw">const</span> result = <span class="kw">await</span> executeMutation({ query: mutation });
+<span class="cm">// LDS cache often updates automatically for updates, but refresh to be safe</span>
+<span class="kw">await</span> this.refreshGraphQL?.();</pre>
+    </div>
+    <div id="m3-delete" class="tab-panel">
+      <pre><span class="cm">// Delete only needs the Id — no other fields required</span>
+<span class="kw">const</span> safeId = <span class="fn">JSON.stringify</span>(id);
+
+<span class="kw">const</span> mutation = gql`
+  <span class="kw">mutation</span> <span class="fn">DeleteAccount</span> {
+    uiapi {
+      <span class="fn">AccountDelete</span>(input: { Id: ${`${`${`<span class="val">safeId</span>`}`}`} }) {  <span class="cm">// ObjectDelete pattern</span>
+        Id   <span class="cm">// returns just the Id of the deleted record</span>
+      }
+    }
+  }
+\`;
+
+<span class="kw">const</span> result = <span class="kw">await</span> executeMutation({ query: mutation });
+
+<span class="cm">// 💡 LDS auto-prunes deleted records from all active wires
+// No explicit refresh needed — the list updates automatically!</span></pre>
+    </div>
+    <div id="m3-safety" class="tab-panel">
+      <pre><span class="cm">// WHY: If a user types:  O'Brien "Co" \
+// and you inject it raw: Name: O'Brien "Co" \
+// → GraphQL parse error (broken string literal)
+
+// gqlString() helper uses JSON.stringify() to escape safely:
+</span>
+<span class="fn">gqlString</span>(raw) {
+  <span class="kw">return</span> JSON.<span class="fn">stringify</span>(raw ?? <span class="str">''</span>);
+}
+
+<span class="cm">// Examples:
+// "Acme Corp"           →  '"Acme Corp"'        ✅ plain string
+// "O'Brien Co"          →  '"O\'Brien Co"'       ✅ apostrophe escaped
+// 'Test "Name"'         →  '"Test \\"Name\\""'   ✅ quotes escaped
+// "Backslash \\ test"   →  '"Backslash \\\\ test"' ✅ backslash escaped
+
+// Always escape BEFORE injecting into gql template literals
+// This is your protection against GraphQL injection</span></pre>
+    </div>
+
+    <!-- Comparison table -->
+    <h3 style="font-size:17px; font-weight:700; color:var(--sf-dark); margin-bottom:12px; margin-top:28px;">Side-by-Side: uiRecordApi vs GraphQL Mutations</h3>
+    <table class="anatomy-table" style="margin-bottom:12px;">
+      <thead><tr><th>Operation</th><th>uiRecordApi (Components 1 &amp; 2)</th><th>GraphQL Mutation (Component 3)</th></tr></thead>
+      <tbody>
+        <tr><td>Create</td><td><code>createRecord({ apiName, fields })</code></td><td><code>AccountCreate(input: { Account: { Name: "…" } })</code></td></tr>
+        <tr><td>Update</td><td><code>updateRecord({ fields: { Id, Name } })</code></td><td><code>AccountUpdate(input: { Id: "…", Account: { Name: "…" } })</code></td></tr>
+        <tr><td>Delete</td><td><code>deleteRecord(id)</code></td><td><code>AccountDelete(input: { Id: "…" })</code></td></tr>
+        <tr><td>Refresh after</td><td><code>refreshGraphQL(this.wiredResult)</code></td><td><code>this.refreshGraphQL()</code> (from wire result)</td></tr>
+        <tr><td>Auto-refresh on delete</td><td>No — must call refreshGraphQL</td><td>Yes — LDS prunes automatically</td></tr>
+        <tr><td>Import module</td><td>lightning/uiGraphQLApi + lightning/uiRecordApi</td><td>lightning/graphql (single import)</td></tr>
+        <tr><td>Mental model</td><td>Mixed: GraphQL reads + REST-style writes</td><td>Unified: everything is GraphQL</td></tr>
+      </tbody>
+    </table>
+    <div class="callout success">
+      <div class="callout-icon">✅</div>
+      <div class="callout-body">
+        <strong>When to use which approach?</strong>
+        Use <strong>uiRecordApi</strong> when you need field-level validation, record type support, or are already using standard LWC patterns. Use <strong>GraphQL mutations</strong> when you want a fully unified GraphQL model, or when you're building components where the read and write logic should share the same transport and namespace.
+      </div>
+    </div>
+  </div>
+</section>
+<div class="divider"></div>
+
+<!-- SECTION 4: QUERY PATTERNS -->
+<section id="query-patterns" style="background:#fafbff;">
+  <div class="container">
+    <div class="section-label">Reference</div>
+    <div class="section-title">Query Patterns</div>
+    <p class="section-sub">Common GraphQL query structures you'll use in Salesforce LWC projects.</p>
+
+    <div class="tab-bar">
+      <button class="tab-btn active" onclick="showTab('qp', 'basic', this)">Basic</button>
+      <button class="tab-btn" onclick="showTab('qp', 'where', this)">Where Filter</button>
+      <button class="tab-btn" onclick="showTab('qp', 'sort', this)">Sort + Limit</button>
+      <button class="tab-btn" onclick="showTab('qp', 'paginate', this)">Pagination</button>
+      <button class="tab-btn" onclick="showTab('qp', 'children', this)">Nested Children</button>
+      <button class="tab-btn" onclick="showTab('qp', 'multi', this)">Multi-Object</button>
+      <button class="tab-btn" onclick="showTab('qp', 'vars', this)">With Variables</button>
+    </div>
+
+    <div id="qp-basic" class="tab-panel active">
+      <div class="callout info"><div class="callout-icon">📘</div><div class="callout-body"><strong>Basic Query</strong>Fetch records of any sObject, asking for exactly the fields you need. Server returns only those — nothing extra.</div></div>
+      <pre><span class="kw">query</span> <span class="fn">BasicContacts</span> {
+  uiapi {
+    query {
+      <span class="fn">Contact</span> {
+        edges {
+          node {
+            Id
+            <span class="fn">FirstName</span> { value }
+            <span class="fn">LastName</span> { value }
+            <span class="fn">Email</span> { value }
+          }
+        }
+      }
+    }
+  }
+}
+<span class="cm">// You asked for 3 fields. Server returns 3 fields.
+// REST would return 50+ fields. GraphQL is precise.</span></pre>
+    </div>
+
+    <div id="qp-where" class="tab-panel">
+      <div class="callout info"><div class="callout-icon">🔵</div><div class="callout-body"><strong>Where Filter</strong>Filter records with eq, like, in, gt, lt, and, or. Equivalent to SOQL WHERE clause.</div></div>
+      <pre><span class="kw">query</span> <span class="fn">FilteredAccounts</span> {
+  uiapi {
+    query {
+      Account(
+        <span class="fn">where</span>: {
+          <span class="cm">// Single field condition:</span>
+          Industry: { eq: <span class="str">"Technology"</span> }
+
+          <span class="cm">// AND multiple conditions:</span>
+          <span class="kw">and</span>: [
+            { Industry: { eq: <span class="str">"Technology"</span> } }
+            { AnnualRevenue: { gt: <span class="num">1000000</span> } }
+          ]
+
+          <span class="cm">// OR conditions:</span>
+          <span class="kw">or</span>: [
+            { Industry: { eq: <span class="str">"Technology"</span> } }
+            { Industry: { eq: <span class="str">"Finance"</span> } }
+          ]
+
+          <span class="cm">// Contains (LIKE %word%):</span>
+          Name: { like: <span class="str">"%Salesforce%"</span> }
+
+          <span class="cm">// Null check:</span>
+          AnnualRevenue: { isNull: <span class="kw">false</span> }
+        }
+      ) {
+        edges { node { Id Name { value } } }
+      }
+    }
+  }
+}
+<span class="cm">// Operators: eq, ne, lt, lte, gt, gte, like, in, nin, isNull</span></pre>
+    </div>
+
+    <div id="qp-sort" class="tab-panel">
+      <div class="callout info"><div class="callout-icon">🟠</div><div class="callout-body"><strong>Sort + Limit</strong>Control record count and ordering. Combine with where for powerful queries.</div></div>
+      <pre><span class="kw">query</span> <span class="fn">Top10Accounts</span> {
+  uiapi {
+    query {
+      Account(
+        <span class="fn">first</span>: <span class="num">10</span>           <span class="cm">// LIMIT — max records returned</span>
+        <span class="fn">orderBy</span>: {         <span class="cm">// ORDER BY</span>
+          Name: { order: ASC }   <span class="cm">// ASC or DESC</span>
+        }
+      ) {
+        edges {
+          node {
+            Id
+            Name { value }
+            CreatedDate { value displayValue }
+          }
+        }
+      }
+    }
+  }
+}
+
+<span class="cm">// Multi-field sort (primary + secondary):
+// orderBy: { Industry: { order: ASC } Name: { order: ASC } }</span></pre>
+    </div>
+
+    <div id="qp-paginate" class="tab-panel">
+      <div class="callout info"><div class="callout-icon">🟣</div><div class="callout-body"><strong>Cursor Pagination</strong>Load the next page of results using a cursor — a bookmark pointing to where you left off. Perfect for "Load More" buttons.</div></div>
+      <pre><span class="cm">// With a $after variable (cursor from previous page)</span>
+<span class="kw">query</span> <span class="fn">PaginatedAccounts</span>(<span class="val">$after</span>: String) {
+  uiapi {
+    query {
+      Account(
+        first: <span class="num">10</span>
+        after: <span class="val">$after</span>   <span class="cm">// pass cursor from previous response</span>
+      ) {
+        edges {
+          <span class="fn">cursor</span>        <span class="cm">// bookmark for this specific record</span>
+          node {
+            Id
+            Name { value }
+          }
+        }
+        <span class="fn">pageInfo</span> {
+          hasNextPage   <span class="cm">// true if more records exist</span>
+          endCursor     <span class="cm">// pass this as $after for next page</span>
+        }
+        <span class="fn">totalCount</span>    <span class="cm">// total matching records overall</span>
+      }
+    }
+  }
+}
+<span class="cm">// In JS: pass variables: { after: this.endCursor } to @wire</span></pre>
+    </div>
+
+    <div id="qp-children" class="tab-panel">
+      <div class="callout success"><div class="callout-icon">🏗️</div><div class="callout-body"><strong>Nested Children — The GraphQL Superpower</strong>Fetch parent + multiple child relationships in ONE network call. With REST, this would be 3+ API calls.</div></div>
+      <pre><span class="kw">query</span> <span class="fn">Account360</span>($accountId: ID!) {
+  uiapi {
+    query {
+      Account(where: { Id: { eq: $accountId } }) {
+        edges {
+          node {
+            Id
+            Name { value }
+            Industry { value }
+
+            <span class="cm">// Child relationship — same edges/node pattern</span>
+            <span class="fn">Contacts</span>(first: <span class="num">50</span> orderBy: { LastName: { order: ASC } }) {
+              edges {
+                node {
+                  Id
+                  Name { value }
+                  Email { value }
+                }
+              }
+              totalCount  <span class="cm">// total contacts for this account</span>
+            }
+
+            <span class="fn">Opportunities</span>(
+              first: <span class="num">50</span>
+              orderBy: { CloseDate: { order: DESC } }
+              where: { IsClosed: { eq: <span class="kw">false</span> } }
+            ) {
+              edges {
+                node {
+                  Id
+                  Name { value }
+                  Amount { value displayValue }
+                  StageName { value }
+                }
+              }
+              totalCount
+            }
+          }
+        }
+      }
+    }
+  }
+}
+<span class="cm">// REST equivalent: GET /accounts/id + GET /contacts?AccountId=id
+//                + GET /opportunities?AccountId=id = 3 calls
+// GraphQL: 1 call. Done.</span></pre>
+    </div>
+
+    <div id="qp-multi" class="tab-panel">
+      <div class="callout info"><div class="callout-icon">⚫</div><div class="callout-body"><strong>Multi-Object Query</strong>Fetch multiple unrelated objects in a single GraphQL call — great for dashboard components.</div></div>
+      <pre><span class="kw">query</span> <span class="fn">DashboardData</span> {
+  uiapi {
+    query {
+      <span class="cm">// Object 1 — same query, side by side</span>
+      <span class="fn">Account</span>(first: <span class="num">5</span> orderBy: { Name: { order: ASC } }) {
+        edges { node { Id Name { value } Industry { value } } }
+      }
+
+      <span class="cm">// Object 2 — completely separate object in the same request</span>
+      <span class="fn">Contact</span>(first: <span class="num">5</span>) {
+        edges { node { Id FirstName { value } LastName { value } } }
+      }
+
+      <span class="cm">// Object 3 — with its own filter</span>
+      <span class="fn">Opportunity</span>(
+        first: <span class="num">5</span>
+        where: { StageName: { eq: <span class="str">"Closed Won"</span> } }
+      ) {
+        edges { node { Id Name { value } Amount { displayValue } } }
+      }
+    }
+  }
+}
+<span class="cm">// 3 objects, 1 API call. REST equivalent: 3 separate calls.</span></pre>
+    </div>
+
+    <div id="qp-vars" class="tab-panel">
+      <div class="callout info"><div class="callout-icon">🎯</div><div class="callout-body"><strong>Variables</strong>Make queries dynamic. Pass runtime values (like recordId, search terms, dates) without rewriting the query string.</div></div>
+      <pre><span class="cm">// STEP 1: Declare variable in query ($ prefix, type with !)</span>
+<span class="kw">query</span> <span class="fn">FilterByStage</span>(<span class="val">$stage</span>: String!, <span class="val">$minAmount</span>: Decimal) {
+  uiapi {
+    query {
+      Opportunity(
+        where: {
+          StageName: { eq: <span class="val">$stage</span> }
+          Amount: { gte: <span class="val">$minAmount</span> }
+        }
+      ) {
+        edges { node { Id Name { value } Amount { displayValue } } }
+      }
+    }
+  }
+}
+
+<span class="cm">// STEP 2: In your LWC JS — reactive getter</span>
+<span class="kw">get</span> <span class="fn">variables</span>() {
+  <span class="kw">return</span> {
+    stage: this.selectedStage,      <span class="cm">// from UI picklist</span>
+    minAmount: this.minimumAmount   <span class="cm">// from UI input</span>
+  };
+}
+
+<span class="cm">// STEP 3: Wire it up</span>
+<span class="op">@wire</span>(graphql, {
+  query: gql`...the query above...`,
+  variables: <span class="str">'$variables'</span>  <span class="cm">// reactive — reruns when getter returns new value</span>
+})
+<span class="fn">handleResult</span>(result) { ... }</pre>
+    </div>
+  </div>
+</section>
+<div class="divider"></div>
+
+<!-- SECTION 5: DATA FLOW -->
+<section id="data-flow">
+  <div class="container">
+    <div class="section-label">How It All Works</div>
+    <div class="section-title">Complete Data Flow</div>
+    <p class="section-sub">From import to template — every step in the lifecycle of a Salesforce GraphQL component.</p>
+
+    <div class="flow">
+      <div class="flow-item">
+        <div class="flow-num">1</div>
+        <div class="flow-body">
+          <div class="flow-title">Import the three tools</div>
+          <div class="flow-desc">Everything you need comes from one module. <code class="inline-code">gql</code> is a tagged template literal that marks your query string. <code class="inline-code">graphql</code> is the wire adapter. <code class="inline-code">refreshGraphQL</code> forces a re-fetch after mutations.</div>
+          <pre><span class="kw">import</span> { gql, graphql, refreshGraphQL } <span class="kw">from</span> <span class="str">'lightning/uiGraphQLApi'</span>;</pre>
+        </div>
+      </div>
+      <div class="flow-item">
+        <div class="flow-num">2</div>
+        <div class="flow-body">
+          <div class="flow-title">(Optional) Define a variables getter for dynamic queries</div>
+          <div class="flow-desc">If your query needs runtime values (a record ID, a filter, a search term), put them in a getter. The <code class="inline-code">'$variables'</code> string in @wire tells the framework to watch this getter reactively.</div>
+          <pre><span class="kw">get</span> <span class="fn">variables</span>() { <span class="kw">return</span> { accountId: this.recordId }; }</pre>
+        </div>
+      </div>
+      <div class="flow-item">
+        <div class="flow-num">3</div>
+        <div class="flow-body">
+          <div class="flow-title">Declare the @wire</div>
+          <div class="flow-desc">The wire registers a reactive subscription. Salesforce runs the query on component load and automatically re-runs it when variables change or <code class="inline-code">refreshGraphQL</code> is called.</div>
+          <pre><span class="op">@wire</span>(graphql, { query: gql`...`, variables: <span class="str">'$variables'</span> })
+<span class="fn">handleResult</span>(result) { ... }</pre>
+        </div>
+      </div>
+      <div class="flow-item">
+        <div class="flow-num">4</div>
+        <div class="flow-body">
+          <div class="flow-title">Store the wire result reference</div>
+          <div class="flow-desc"><strong>Critical step.</strong> Save <code class="inline-code">result</code> into a class property. You'll need this reference later to call <code class="inline-code">refreshGraphQL()</code> after any create/update/delete. Without it, you can't force a refresh.</div>
+          <pre>this.wiredResult = result; <span class="cm">// store FIRST, then process</span>
+<span class="kw">const</span> { data, errors } = result;</pre>
+        </div>
+      </div>
+      <div class="flow-item">
+        <div class="flow-num">5</div>
+        <div class="flow-body">
+          <div class="flow-title">Map nested response to flat objects</div>
+          <div class="flow-desc">The raw GraphQL response is deeply nested (edges → node → field.value). Use <code class="inline-code">.map()</code> to extract and flatten into simple objects your template can use without any property chaining.</div>
+          <pre>this.accounts = data.uiapi.query.Account.edges.<span class="op">map</span>(e => ({
+  Id:       e.node.Id,
+  Name:     e.node.Name.value,
+  Industry: e.node.Industry?.value ?? <span class="str">'—'</span>
+}));</pre>
+        </div>
+      </div>
+      <div class="flow-item">
+        <div class="flow-num">6</div>
+        <div class="flow-body">
+          <div class="flow-title">Mutate via uiRecordApi, then refresh</div>
+          <div class="flow-desc">GraphQL is read-only. Writes go through uiRecordApi. After every mutation, call <code class="inline-code">refreshGraphQL(this.wiredResult)</code> to re-run the @wire query and sync the UI with the new data.</div>
+          <pre><span class="kw">await</span> createRecord({ apiName: <span class="str">'Account'</span>, fields: { Name: <span class="str">'Acme'</span> } });
+<span class="kw">await</span> refreshGraphQL(this.wiredResult); <span class="cm">// triggers step 4-5 again</span></pre>
+        </div>
+      </div>
+      <div class="flow-item">
+        <div class="flow-num">7</div>
+        <div class="flow-body">
+          <div class="flow-title">Template iterates the clean flat array</div>
+          <div class="flow-desc">Because of the .map() in step 5, the template just uses clean field names. No nested access, no .value — just <code class="inline-code">{acct.Name}</code>.</div>
+          <pre>&lt;<span class="kw">template</span> <span class="fn">for:each</span>={accounts} <span class="fn">for:item</span>=<span class="str">"acct"</span>&gt;
+  &lt;tr <span class="fn">key</span>={acct.Id}&gt;
+    &lt;td&gt;{acct.Name}&lt;/td&gt;     <span class="cm">&lt;!-- clean, not {acct.Name.value} --&gt;</span>
+    &lt;td&gt;{acct.Industry}&lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/<span class="kw">template</span>&gt;</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<div class="divider"></div>
+
+<!-- SECTION 6: CHEAT SHEET -->
+<section id="cheatsheet" style="background:#fafbff;">
+  <div class="container">
+    <div class="section-label">Quick Reference</div>
+    <div class="section-title">Cheat Sheet</div>
+    <p class="section-sub">Everything in one place. Bookmark this page.</p>
+
+    <table class="cheat-table">
+      <thead><tr><th>Concept</th><th>Syntax</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td>Import</td><td>import { gql, graphql, refreshGraphQL } from 'lightning/uiGraphQLApi'</td><td>All 3 from the same module</td></tr>
+        <tr><td>Wire decorator</td><td>@wire(graphql, { query: gql`...` })</td><td>Runs on load, re-runs on variable change</td></tr>
+        <tr><td>Named query</td><td>query MyQueryName { ... }</td><td>Always name queries — helps debugging</td></tr>
+        <tr><td>API gateway</td><td>uiapi { query { ... } }</td><td>Always the outer shell in Salesforce GraphQL</td></tr>
+        <tr><td>Limit records</td><td>Account(first: 10)</td><td>Like SOQL LIMIT — always set this</td></tr>
+        <tr><td>Sort</td><td>orderBy: { Name: { order: ASC } }</td><td>ASC or DESC. Multiple fields supported</td></tr>
+        <tr><td>Filter equals</td><td>where: { Industry: { eq: "Technology" } }</td><td>Like WHERE in SOQL</td></tr>
+        <tr><td>Filter contains</td><td>Name: { like: "%Acme%" }</td><td>% is wildcard — like SOQL LIKE</td></tr>
+        <tr><td>AND / OR</td><td>and: [...], or: [...]</td><td>Array of condition objects</td></tr>
+        <tr><td>List wrapper</td><td>edges { node { ... } }</td><td>Always required for list results</td></tr>
+        <tr><td>Id field</td><td>Id</td><td>Plain string — no { value } needed</td></tr>
+        <tr><td>Standard field</td><td>Name { value }</td><td>All fields need { value } in Salesforce GraphQL</td></tr>
+        <tr><td>Formatted value</td><td>Amount { value displayValue }</td><td>displayValue = "$1,500,000" (locale-formatted)</td></tr>
+        <tr><td>Variable declare</td><td>query MyQuery($id: ID!) { ... }</td><td>! = required. Types: ID!, String, Decimal, Boolean</td></tr>
+        <tr><td>Variable use</td><td>where: { Id: { eq: $id } }</td><td>$ prefix when using the variable</td></tr>
+        <tr><td>Reactive variables</td><td>variables: '$variables'</td><td>Calls this.variables getter; reruns on change</td></tr>
+        <tr><td>Single record</td><td>edges[0].node</td><td>Detail pages — always guard with null check</td></tr>
+        <tr><td>Total count</td><td>totalCount</td><td>Alongside edges — total matching records</td></tr>
+        <tr><td>Pagination info</td><td>pageInfo { hasNextPage endCursor }</td><td>For Load More / infinite scroll</td></tr>
+        <tr><td>Null-safe JS</td><td>field?.value ?? 'fallback'</td><td>Always use for nullable fields</td></tr>
+        <tr><td>Force refresh</td><td>await refreshGraphQL(this.wiredResult)</td><td>Call after every create/update/delete</td></tr>
+        <tr><td>Error handling</td><td>const { data, errors } = result</td><td>Check both — can have partial errors</td></tr>
+        <tr><td colspan="3" style="background:#f0f4ff; font-weight:700; color:var(--sf-dark); font-size:13px;">⚡ GraphQL Mutations (lightning/graphql module)</td></tr>
+        <tr><td>Mutation import</td><td>import { gql, graphql, executeMutation } from 'lightning/graphql'</td><td>Different module from uiGraphQLApi</td></tr>
+        <tr><td>Refresh from wire</td><td>const { data, errors, refresh } = result; this.fn = refresh;</td><td>No need to import refreshGraphQL separately</td></tr>
+        <tr><td>Create mutation</td><td>AccountCreate(input: { Account: { Name: "…" } }) { Record { Id } }</td><td>Inside uiapi { } namespace</td></tr>
+        <tr><td>Update mutation</td><td>AccountUpdate(input: { Id: "…", Account: { Name: "…" } }) { Record { Id } }</td><td>Id + fields to change</td></tr>
+        <tr><td>Delete mutation</td><td>AccountDelete(input: { Id: "…" }) { Id }</td><td>Returns Id of deleted record</td></tr>
+        <tr><td>Execute mutation</td><td>const result = await executeMutation({ query: mutation })</td><td>mutation is built with gql``</td></tr>
+        <tr><td>String safety</td><td>JSON.stringify(rawValue)</td><td>Always escape before gql template injection</td></tr>
+        <tr><td>LDS auto-prune</td><td>(no code needed after delete)</td><td>Deletes auto-remove from wire — no refresh required</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout warn" style="margin-top:24px;">
+      <div class="callout-icon">⚠️</div>
+      <div class="callout-body">
+        <strong>The 5 Salesforce GraphQL Gotchas</strong>
+        1. <strong>Always { value }</strong> — every field (except Id) is wrapped. Name.value, not Name.<br>
+        2. <strong>GraphQL reads are read-only by default</strong> — use uiRecordApi or <code>executeMutation</code> (lightning/graphql) for writes.<br>
+        3. <strong>Store refresh reference</strong> — either <code>this.wiredResult = result</code> (uiGraphQLApi) or capture <code>refresh</code> from wire result (lightning/graphql).<br>
+        4. <strong>Wrong module for mutations</strong> — <code>executeMutation</code> only exists in <code>lightning/graphql</code>, not <code>lightning/uiGraphQLApi</code>.<br>
+        5. <strong>Escape mutation inputs</strong> — always <code>JSON.stringify()</code> before injecting user values into gql template literals.
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>Built for <strong>Divings by Sangam</strong> · Salesforce LWC GraphQL Teaching Series</p>
+  <p style="margin-top:6px; font-size:12px;">Based on <a href="#">graphqlBasicDemo</a> + <a href="#">graphqlAccountWithChildren</a> · API v66.0</p>
+</footer>
+
+<script>
+  function showTab(group, name, btn) {
+    document.querySelectorAll('#' + group + '-' + name).forEach(el => {});
+    // find all panels in this group
+    const allPanels = document.querySelectorAll('[id^="' + group + '-"]');
+    allPanels.forEach(p => p.classList.remove('active'));
+    const targetPanel = document.getElementById(group + '-' + name);
+    if (targetPanel) targetPanel.classList.add('active');
+
+    // update tab buttons — find siblings
+    const tabBar = btn.closest('.tab-bar');
+    if (tabBar) {
+      tabBar.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    }
+  }
+
+  // Active nav link on scroll
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.nav-links a');
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(section => {
+      if (window.scrollY >= section.offsetTop - 80) current = section.id;
+    });
+    navLinks.forEach(a => {
+      a.classList.toggle('active', a.getAttribute('href') === '#' + current);
+    });
+  });
+</script>
+</body>
+</html>
